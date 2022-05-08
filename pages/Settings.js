@@ -1,0 +1,146 @@
+import React, {useState} from 'react';
+import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
+import styleFile from './style';
+import MyDatePicker from './components/DatePicker';
+import TimePicker from './components/TimePicker';
+import {useSelector, useDispatch} from 'react-redux';
+
+const Settings = ({navigation}) => {
+  const timeSettings = useSelector(state => state.settings);
+  const dispatch = useDispatch();
+
+  const Render = ({timeSettings}) => {
+    const [timeStart, setDateStart] = useState(
+      new Date(
+        new Date().setHours(
+          timeSettings.timeStartHour,
+          timeSettings.timeStartMin,
+          0,
+          0,
+        ),
+      ),
+    );
+    const [timeEnd, setDateEnd] = useState(
+      new Date(
+        new Date().setHours(
+          timeSettings.timeEndHour,
+          timeSettings.timeEndMin,
+          0,
+          0,
+        ),
+      ),
+    );
+    const [timeDinner, setTimeStart] = useState(timeSettings.timeDinner);
+    const countriesDinner = timeSettings.countriesDinner;
+
+    const insertObjSettings = {
+      timeStartHour: timeStart.getHours(),
+      timeStartMin: timeStart.getMinutes(),
+      timeEndHour: timeEnd.getHours(),
+      timeEndMin: timeEnd.getMinutes(),
+      timeDinner: timeDinner,
+      countriesDinner: timeSettings.countriesDinner,
+    };
+
+    return (
+      <View>
+        <Text style={styles.titleHeader}>Параметры по умолчанию</Text>
+        <View style={styles.pickerConteiner}>
+          <MyDatePicker
+            onChange={setDateStart}
+            date={timeStart}
+            title={'Начало'}
+            formatDate={'HH:mm'}
+            mode={'time'}
+          />
+
+          <MyDatePicker
+            onChange={setDateEnd}
+            date={timeEnd}
+            title={'Конец'}
+            formatDate={'HH:mm'}
+            mode={'time'}
+          />
+
+          <TimePicker
+            onChange={setTimeStart}
+            timeDinner={timeDinner}
+            countries={countriesDinner}
+            title={'Обед, мин.'}
+          />
+        </View>
+
+        <TouchableHighlight
+          activeOpacity={styleFile.button.activeOpacity}
+          underlayColor={styleFile.button.underlayColor}
+          style={styles.buttonApply}
+          onPress={() => {
+            [
+              dispatch({
+                type: 'UPPDATE_SETTINGS',
+                payload: insertObjSettings,
+              }),
+              navigation.goBack(),
+            ];
+          }}>
+          <Text style={styles.text}>Применить</Text>
+        </TouchableHighlight>
+      </View>
+    );
+  };
+
+  return (
+    <View style={styles.view}>
+      <View style={styles.applyDate}>
+        <Render timeSettings={timeSettings} />
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  view: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: styleFile.view.backgroundColor,
+  },
+  text: {
+    color: styleFile.text.color,
+    fontSize: 18,
+  },
+  applyDate: {
+    padding: 15,
+    margin: '3%',
+    backgroundColor: styleFile.window.backgroundColor,
+    borderRadius: 15,
+  },
+  pickerConteiner: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginBottom: 15,
+    padding: 5,
+  },
+  titleHeader: {
+    textAlign: 'center',
+    paddingLeft: 5,
+    paddingRight: 5,
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: styleFile.text.color,
+  },
+  buttonApply: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 20,
+    paddingRight: 20,
+    borderRadius: 8,
+    backgroundColor: styleFile.button.backgroundColor,
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginBottom: 3,
+  },
+});
+
+export default Settings;
