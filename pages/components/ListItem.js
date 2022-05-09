@@ -150,12 +150,12 @@ const styles = StyleSheet.create({
     right: 0,
   },
   iconButton: {
-    fontSize: 20,
+    fontSize: 18,
     color: styleFile.tab.colorActive,
     padding: 12,
   },
   textTitle: {
-    fontSize: 18,
+    fontSize: 16,
     color: styleFile.text.color,
   },
 });

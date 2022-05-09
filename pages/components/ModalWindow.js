@@ -146,8 +146,6 @@ const styles = StyleSheet.create({
   buttonClose: {
     paddingTop: 1,
     paddingBottom: 2,
-    // paddingLeft: 15,
-    // paddingRight: 15,
     backgroundColor: styleFile.button.backgroundColor,
     borderRadius: 5,
     marginRight: 10,
@@ -157,12 +155,12 @@ const styles = StyleSheet.create({
   text: {
     color: styleFile.text.color,
     textAlign: 'center',
-    fontSize: 18,
-    lineHeight: 18 * 1.4,
+    fontSize: 16,
+    lineHeight: 16 * 1.4,
   },
   textTitle: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 16,
   },
 });
 

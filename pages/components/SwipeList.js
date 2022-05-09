@@ -71,13 +71,25 @@ export const SwipeListComponent = ({array, reloadDBMounthList}) => {
           })
         }>
         <View style={[styles.rowFront, styles.border]}>
-          <Text style={[styles.textTitle, {flex: 1, textAlign: 'center'}]}>
+          <Text
+            style={[
+              styles.textTitle,
+              {flex: 1, textAlign: 'center', padding: 5},
+            ]}>
             {dateStart}
           </Text>
-          <Text style={[styles.textTitle, {flex: 4, textAlign: 'center'}]}>
+          <Text
+            style={[
+              styles.textTitle,
+              {flex: 4, textAlign: 'center', padding: 5},
+            ]}>
             {data.item.l.formatDate}
           </Text>
-          <Text style={[styles.textTitle, {flex: 1, textAlign: 'center'}]}>
+          <Text
+            style={[
+              styles.textTitle,
+              {flex: 1, textAlign: 'center', padding: 5},
+            ]}>
             ({data.item.l.timeWork} ч.)
           </Text>
         </View>
@@ -186,7 +198,7 @@ const styles = StyleSheet.create({
   textBtn: {
     color: styleFile.text.color,
     textAlign: 'center',
-    fontSize: 18,
-    lineHeight: 18 * 1.4,
+    fontSize: 16,
+    lineHeight: 16 * 1.4,
   },
 });

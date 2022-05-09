@@ -59,7 +59,7 @@ export default function Navigate() {
           component={ClockRecords}
           options={{
             title: 'Запись часов',
-            tabBarLabelStyle: {fontSize: 12},
+            tabBarLabelStyle: {fontSize: 10},
             tabBarIcon: ({focused}) => {
               let color = styleFile.tab.color;
               if (focused) {
@@ -73,7 +73,7 @@ export default function Navigate() {
           name="AllEntries"
           component={AllEntries}
           options={{
-            tabBarLabelStyle: {fontSize: 12},
+            tabBarLabelStyle: {fontSize: 10},
             title: 'Записи',
             tabBarIcon: ({focused}) => {
               let color = styleFile.tab.color;
