@@ -36,6 +36,8 @@ const ClockRecords = ({navigation}) => {
 
     const [timeDinner, setTimeStart] = useState(timeSettings.timeDinner);
     const countriesDinner = timeSettings.countriesDinner;
+    const [timeStartModalWin, settimeStartModalWin] = useState(false);
+    const [timeEndModalWin, settimeEndModalWin] = useState(false);
 
     const writeToDB = () => {
       moment.locale('ru');
@@ -98,33 +100,71 @@ const ClockRecords = ({navigation}) => {
         <View style={{alignContent: 'center', alignItems: 'center'}}>
           <Text style={styles.titleHeader}>Запись рабочих часов</Text>
 
-          <MyDatePicker
-            onChange={setDateStart}
-            date={timeStart}
-            title={'Начало смены'}
-            formatDate={'DD.MM.YY, HH:mm'}
-            mode={'datetime'}
-          />
+          <View style={styles.pickerWrap}>
+            <Text style={[styles.text, styles.titleDatePicker]}>
+              Начало смены
+            </Text>
+            <TouchableHighlight
+              activeOpacity={styleFile.button.activeOpacity}
+              underlayColor={styleFile.button.underlayColor}
+              onPress={() => {
+                settimeStartModalWin(true);
+              }}
+              style={styles.button}>
+              <Text style={styles.text}>
+                {moment(timeStart).format('DD.MM.YY, HH:mm')}
+              </Text>
+            </TouchableHighlight>
+            <MyDatePicker
+              onChange={setDateStart}
+              date={timeStart}
+              open={timeStartModalWin}
+              setOpen={settimeStartModalWin}
+              title={'Начало смены'}
+              formatDate={'DD.MM.YY, HH:mm'}
+              mode={'datetime'}
+            />
+          </View>
 
-          <MyDatePicker
-            onChange={setDateEnd}
-            date={timeEnd}
-            title={'Конец смены'}
-            formatDate={'DD.MM.YY, HH:mm'}
-            mode={'datetime'}
-          />
+          <View style={styles.pickerWrap}>
+            <Text style={[styles.text, styles.titleDatePicker]}>
+              Конец смены
+            </Text>
+            <TouchableHighlight
+              activeOpacity={styleFile.button.activeOpacity}
+              underlayColor={styleFile.button.underlayColor}
+              onPress={() => {
+                settimeEndModalWin(true);
+              }}
+              style={styles.button}>
+              <Text style={styles.text}>
+                {moment(timeEnd).format('DD.MM.YY, HH:mm')}
+              </Text>
+            </TouchableHighlight>
+            <MyDatePicker
+              onChange={setDateEnd}
+              date={timeEnd}
+              open={timeEndModalWin}
+              setOpen={settimeEndModalWin}
+              title={'Конец смены'}
+              formatDate={'DD.MM.YY, HH:mm'}
+              mode={'datetime'}
+            />
+          </View>
 
-          <TimePicker
-            onChange={setTimeStart}
-            timeDinner={timeDinner}
-            countries={countriesDinner}
-            title={'Обед, мин.'}
-          />
+          <View style={styles.pickerWrap}>
+            <TimePicker
+              onChange={setTimeStart}
+              timeDinner={timeDinner}
+              countries={countriesDinner}
+              title={'Обед, мин.'}
+            />
+          </View>
 
           <TouchableHighlight
             activeOpacity={styleFile.button.activeOpacity}
             underlayColor={styleFile.button.underlayColor}
-            style={styles.button}
+            style={[styles.button, styles.buttonApply]}
             onPress={writeToDB}>
             <Text style={styles.text}>Применить</Text>
           </TouchableHighlight>
@@ -154,20 +194,32 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   titleHeader: {
+    padding: 5,
     fontSize: 20,
     fontWeight: 'bold',
     color: styleFile.text.color,
   },
 
+  pickerWrap: {
+    width: '100%',
+    alignItems: 'center',
+    padding: 5,
+  },
+
+  titleDatePicker: {
+    marginBottom: 5,
+    fontWeight: 'bold',
+  },
   button: {
-    marginTop: 15,
-    paddingTop: 5,
-    paddingBottom: 5,
-    paddingLeft: 30,
-    paddingRight: 30,
-    borderRadius: 8,
-    marginBottom: 15,
+    padding: 5,
     backgroundColor: styleFile.button.backgroundColor,
+    borderRadius: 8,
+    width: '40%',
+    alignItems: 'center',
+  },
+  buttonApply: {
+    marginTop: 10,
+    marginBottom: 12,
   },
   text: {
     color: styleFile.text.color,

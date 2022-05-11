@@ -4,12 +4,15 @@ import styleFile from './style';
 import MyDatePicker from './components/DatePicker';
 import TimePicker from './components/TimePicker';
 import {useSelector, useDispatch} from 'react-redux';
+import moment from 'moment/min/moment-with-locales';
 
 const Settings = ({navigation}) => {
   const timeSettings = useSelector(state => state.settings);
   const dispatch = useDispatch();
 
   const Render = ({timeSettings}) => {
+    const [timeStartModalWin, settimeStartModalWin] = useState(false);
+    const [timeEndModalWin, settimeEndModalWin] = useState(false);
     const [timeStart, setDateStart] = useState(
       new Date(
         new Date().setHours(
@@ -46,28 +49,59 @@ const Settings = ({navigation}) => {
       <View>
         <Text style={styles.titleHeader}>Параметры по умолчанию</Text>
         <View style={styles.pickerConteiner}>
-          <MyDatePicker
-            onChange={setDateStart}
-            date={timeStart}
-            title={'Начало'}
-            formatDate={'HH:mm'}
-            mode={'time'}
-          />
+          <View style={styles.pickerWrap}>
+            <Text style={[styles.text, styles.titleDatePicker]}>Начало</Text>
+            <TouchableHighlight
+              activeOpacity={styleFile.button.activeOpacity}
+              underlayColor={styleFile.button.underlayColor}
+              onPress={() => {
+                settimeStartModalWin(true);
+              }}
+              style={styles.button}>
+              <Text style={styles.text}>
+                {moment(timeStart).format('HH:mm')}
+              </Text>
+            </TouchableHighlight>
+            <MyDatePicker
+              onChange={setDateStart}
+              date={timeStart}
+              title={'Начало'}
+              formatDate={'HH:mm'}
+              mode={'time'}
+              open={timeStartModalWin}
+              setOpen={settimeStartModalWin}
+            />
+          </View>
+          <View style={styles.pickerWrap}>
+            <Text style={[styles.text, styles.titleDatePicker]}>Конец</Text>
+            <TouchableHighlight
+              activeOpacity={styleFile.button.activeOpacity}
+              underlayColor={styleFile.button.underlayColor}
+              onPress={() => {
+                settimeEndModalWin(true);
+              }}
+              style={styles.button}>
+              <Text style={styles.text}>{moment(timeEnd).format('HH:mm')}</Text>
+            </TouchableHighlight>
+            <MyDatePicker
+              onChange={setDateEnd}
+              date={timeEnd}
+              open={timeEndModalWin}
+              setOpen={settimeEndModalWin}
+              title={'Конец'}
+              formatDate={'HH:mm'}
+              mode={'time'}
+            />
+          </View>
 
-          <MyDatePicker
-            onChange={setDateEnd}
-            date={timeEnd}
-            title={'Конец'}
-            formatDate={'HH:mm'}
-            mode={'time'}
-          />
-
-          <TimePicker
-            onChange={setTimeStart}
-            timeDinner={timeDinner}
-            countries={countriesDinner}
-            title={'Обед, мин.'}
-          />
+          <View style={styles.pickerWrap}>
+            <TimePicker
+              onChange={setTimeStart}
+              timeDinner={timeDinner}
+              countries={countriesDinner}
+              title={'Обед, мин.'}
+            />
+          </View>
         </View>
 
         <TouchableHighlight
@@ -104,42 +138,60 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: styleFile.view.backgroundColor,
   },
-  text: {
-    color: styleFile.text.color,
-    fontSize: 18,
-  },
   applyDate: {
-    padding: 15,
     margin: '3%',
+    padding: 5,
     backgroundColor: styleFile.window.backgroundColor,
     borderRadius: 15,
+  },
+  titleHeader: {
+    alignSelf: 'center',
+    padding: 5,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: styleFile.text.color,
   },
   pickerConteiner: {
     flexWrap: 'wrap',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignSelf: 'center',
-    marginBottom: 15,
-    padding: 5,
+    width: '50%',
+    marginBottom: 10,
   },
-  titleHeader: {
-    textAlign: 'center',
-    paddingLeft: 5,
-    paddingRight: 5,
+
+  pickerWrap: {
+    alignItems: 'center',
+    margin: '2%',
+  },
+
+  titleDatePicker: {
+    marginBottom: 5,
     fontWeight: 'bold',
-    fontSize: 20,
-    color: styleFile.text.color,
+  },
+  button: {
+    paddingTop: 4,
+    paddingBottom: 4,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: styleFile.button.backgroundColor,
+    borderRadius: 8,
+    alignItems: 'center',
   },
   buttonApply: {
     paddingTop: 5,
     paddingBottom: 5,
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingLeft: 15,
+    paddingRight: 15,
     borderRadius: 8,
     backgroundColor: styleFile.button.backgroundColor,
-    alignItems: 'center',
     alignSelf: 'center',
-    marginBottom: 3,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  text: {
+    color: styleFile.text.color,
+    fontSize: 18,
   },
 });
 

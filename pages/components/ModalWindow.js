@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 18,
   },
 });
 
