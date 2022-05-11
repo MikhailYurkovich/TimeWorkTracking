@@ -181,8 +181,8 @@ const styles = StyleSheet.create({
   buttonApply: {
     paddingTop: 5,
     paddingBottom: 5,
-    paddingLeft: 15,
-    paddingRight: 15,
+    paddingLeft: 20,
+    paddingRight: 20,
     borderRadius: 8,
     backgroundColor: styleFile.button.backgroundColor,
     alignSelf: 'center',
