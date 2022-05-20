@@ -4,6 +4,5 @@
 ![](https://github.com/MikhailYurkovich/TimeWorkTracking/blob/main/img/Screenshot_1653075508.png)
 ![](https://github.com/MikhailYurkovich/TimeWorkTracking/blob/main/img/Screenshot_1653075812.png)
 ![](https://github.com/MikhailYurkovich/TimeWorkTracking/blob/main/img/Screenshot_1653075852.png)
-![](https://github.com/MikhailYurkovich/TimeWorkTracking/blob/main/img/Screenshot_1653075852.png)
 ![](https://github.com/MikhailYurkovich/TimeWorkTracking/blob/main/img/Screenshot_1653075855.png)
 ![](https://github.com/MikhailYurkovich/TimeWorkTracking/blob/main/img/Screenshot_1653075859.png)
