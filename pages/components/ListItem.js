@@ -11,6 +11,7 @@ import styleFile from '../style';
 import {deleteMounthIdListId} from '../../database/allSchemas';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {SwipeListComponent} from './SwipeList';
+import {CalendarPicker} from './Calendar';
 
 export const ListItemComponent = ({
   item,
@@ -114,6 +115,7 @@ export const ListItemComponent = ({
           onLayout={event =>
             setBodySectionHeight(event.nativeEvent.layout.height)
           }>
+          {/* <CalendarPicker array={item.listWorks} /> */}
           <SwipeListComponent
             array={item.listWorks}
             reloadDBMounthList={reloadDBMounthList}

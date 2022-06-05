@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     padding: 5,
     backgroundColor: styleFile.button.backgroundColor,
     borderRadius: 8,
-    width: '40%',
+    width: 150,
     alignItems: 'center',
   },
   buttonApply: {

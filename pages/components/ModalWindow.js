@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginRight: 10,
     marginLeft: 10,
-    width: '35%',
+    width: 85,
   },
   text: {
     color: styleFile.text.color,

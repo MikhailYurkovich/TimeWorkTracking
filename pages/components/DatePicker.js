@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   buttonApply: {
-    width: '35%',
+    width: 105,
     padding: 4,
     margin: 5,
     borderRadius: 6,
