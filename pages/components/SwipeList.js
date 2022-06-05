@@ -74,21 +74,17 @@ export const SwipeListComponent = ({array, reloadDBMounthList}) => {
           <Text
             style={[
               styles.textTitle,
-              {flex: 1, textAlign: 'center', padding: 5},
+              {flex: 1, textAlign: 'left', marginLeft: 10},
             ]}>
             {dateStart}
           </Text>
-          <Text
-            style={[
-              styles.textTitle,
-              {flex: 4, textAlign: 'center', padding: 5},
-            ]}>
+          <Text style={[styles.textTitle, {flex: 2, textAlign: 'center'}]}>
             {data.item.l.formatDate}
           </Text>
           <Text
             style={[
               styles.textTitle,
-              {flex: 1, textAlign: 'center', padding: 5},
+              {flex: 1, textAlign: 'right', marginRight: 10},
             ]}>
             ({data.item.l.timeWork} ч.)
           </Text>
