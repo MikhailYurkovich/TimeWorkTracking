@@ -1,30 +1,38 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TouchableHighlight,
   Modal,
   TouchableWithoutFeedback,
 } from 'react-native';
 import styleFile from '../style';
-// import moment from 'moment';
 import DatePicker from 'react-native-date-picker';
+import {BtnContainerApply} from './BtnContainerApply';
 
-function MyDatePicker(props) {
-  const [date, setDate] = useState(props.date);
-  const setOpen = props.setOpen;
+const MyDatePicker = ({onChange, date, open, setOpen, title, mode}) => {
+  const [datePicker, setdatePicker] = useState(new Date());
 
-  const handleDateChange = date => {
-    props.onChange(date);
-    setDate(date);
+  useEffect(() => {
+    setdatePicker(new Date(date));
+  }, [date]);
+
+  const handleDateChange = () => {
+    onChange(datePicker);
+    setdatePicker(datePicker);
+    setOpen(false);
+  };
+
+  const btnClose = () => {
+    setOpen(false);
   };
 
   return (
     <Modal
       animationType="fade"
       transparent={true}
-      visible={props.open}
+      visible={open}
+      style={{zIndex: 100}}
       onRequestClose={() => {
         setOpen(false);
       }}>
@@ -34,56 +42,44 @@ function MyDatePicker(props) {
 
       <View style={styles.modalContent}>
         <View style={styles.modalView}>
-          <Text style={styles.textTitle}>{props.title}</Text>
+          <Text style={styles.textTitle}>{title}</Text>
           <View style={styles.datePickerWrap}>
             <DatePicker
               fadeToColor={'none'}
               textColor={styleFile.text.color}
-              date={date}
-              onDateChange={setDate}
+              date={datePicker}
+              onDateChange={setdatePicker}
               is24hourSource={'device'}
               minuteInterval={30}
               androidVariant={'nativeAndroid'}
               locale="ru"
-              mode={props.mode}
+              mode={mode}
             />
           </View>
           <View style={styles.buttonWrap}>
-            <TouchableHighlight
-              activeOpacity={styleFile.button.activeOpacity}
-              underlayColor={styleFile.button.underlayColor}
-              style={styles.buttonApply}
-              onPress={() => {
-                setOpen(false);
-              }}>
-              <Text style={styles.buttonApply.text}>Отмена</Text>
-            </TouchableHighlight>
-            <TouchableHighlight
-              activeOpacity={styleFile.button.activeOpacity}
-              underlayColor={styleFile.button.underlayColor}
-              style={styles.buttonApply}
-              onPress={() => {
-                handleDateChange(date);
-                setOpen(false);
-              }}>
-              <Text style={styles.buttonApply.text}>Применить</Text>
-            </TouchableHighlight>
+            <BtnContainerApply
+              btnApply_1={btnClose}
+              btnApply_2={handleDateChange}
+              textBtn_1={'Отмена'}
+              textBtn_2={'Применить'}
+            />
           </View>
         </View>
       </View>
     </Modal>
   );
-}
+};
 
 const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
     justifyContent: 'center',
-    margin: '10%',
+    width: 280,
+    alignSelf: 'center',
   },
   modalView: {
     backgroundColor: styleFile.window.backgroundColor,
-    borderRadius: 15,
+    borderRadius: 5,
     padding: 5,
   },
   modalOverlay: {
@@ -101,42 +97,11 @@ const styles = StyleSheet.create({
     color: styleFile.text.color,
     textAlign: 'center',
     padding: 2,
+    marginBottom: 5,
   },
   datePickerWrap: {
     alignItems: 'center',
   },
-  buttonWrap: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    padding: 5,
-  },
-  buttonApply: {
-    width: 105,
-    padding: 4,
-    margin: 5,
-    borderRadius: 6,
-    backgroundColor: styleFile.button.backgroundColor,
-    alignItems: 'center',
-    alignSelf: 'center',
-    text: {
-      fontSize: 16,
-      color: styleFile.text.color,
-    },
-  },
-  // button: {
-  //   width: '100%',
-  //   borderRadius: 8,
-  //   backgroundColor: styleFile.button.backgroundColor,
-  //   paddingTop: 5,
-  //   paddingBottom: 5,
-  //   paddingLeft: 20,
-  //   paddingRight: 20,
-  //   text: {
-  //     fontSize: 16,
-  //     color: styleFile.text.color,
-  //   },
-  // },
+  buttonWrap: {width: 230, alignSelf: 'center', marginVertical: 5},
 });
-
 export default MyDatePicker;

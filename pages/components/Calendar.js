@@ -1,13 +1,23 @@
-import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
-import React, {useState} from 'react';
+import React from 'react';
+import {Calendar} from 'react-native-calendars';
 import {LocaleConfig} from 'react-native-calendars';
-import {View, Text} from 'react-native';
 import moment from 'moment';
-import styleFile from '../style';
 
 LocaleConfig.locales['ru'] = {
-  monthNames: [],
-
+  monthNames: [
+    'Январь',
+    'Февраль',
+    'Март',
+    'Апрель',
+    'Май',
+    'Июнь',
+    'Июль',
+    'Август',
+    'Сентябрь',
+    'Октябрь',
+    'Ноябрь',
+    'Декабрь',
+  ],
   dayNames: [
     'Воскресенье',
     'Понедельник',
@@ -18,37 +28,74 @@ LocaleConfig.locales['ru'] = {
     'Суббота',
   ],
   dayNamesShort: ['Вс.', 'Пн.', 'Вт.', 'Ср.', 'Чт.', 'Пт.', 'Сб.'],
-  // today: "Aujourd'hui",
 };
 LocaleConfig.defaultLocale = 'ru';
 
-export const CalendarPicker = ({array}) => {
-  const [date, setdate] = useState(array);
+export const CalendarPicker = ({
+  listMonth,
+  queryMount,
+  setselectedDay,
+  selectedDay,
+  setselectedMount,
+}) => {
+  let markedDates = {
+    [selectedDay]: {
+      selected: true,
+      disableTouchEvent: false,
+      customStyles: {
+        container: {
+          backgroundColor: 'red',
+        },
+      },
+    },
+  };
 
-  const nameMonth = moment(new Date(date[0].timeStart))
-    .local('ru')
-    .format('YYYY-MM-DD');
+  if (listMonth) {
+    const marked = listMonth.listWorks.reduce((target, key) => {
+      if (
+        moment(key.timeStart).format('YYYY-MM-DD') ==
+        moment(new Date()).format('YYYY-MM-DD')
+      ) {
+        target[moment(new Date(key.timeStart)).format('YYYY-MM-DD')] = {
+          selected: true,
+          customStyles: {
+            text: {
+              color: 'red',
+            },
+          },
+        };
+      } else {
+        target[moment(new Date(key.timeStart)).format('YYYY-MM-DD')] = {
+          selected: true,
 
-  let markedDates = new Object();
-  for (let i = 0; i < array.length; i++) {
-    markedDates[
-      moment(new Date(array[i].timeStart)).local('ru').format('YYYY-MM-DD')
-    ] = {selected: true, selectedColor: styleFile.tab.colorActive};
+          disableTouchEvent: false,
+        };
+      }
+
+      return target;
+    }, {});
+
+    markedDates = Object.assign(marked, markedDates);
   }
-
   return (
-    <>
-      <Calendar
-        current={nameMonth}
-        customHeaderTitle={<></>}
-        onDayPress={day => {
-          console.log('selected day', day);
-        }}
-        hideArrows={true}
-        firstDay={1}
-        hideExtraDays={true}
-        markedDates={markedDates}
-      />
-    </>
+    <Calendar
+      initialDate={moment(new Date()).format('YYYY-MM-DD')}
+      onMonthChange={month => {
+        queryMount(Number(moment(month.dateString).format('YYYYMM')));
+        setselectedMount(month.dateString);
+      }}
+      onDayPress={day => {
+        setselectedDay(day.dateString);
+      }}
+      monthFormat={'MMMM yyyy'}
+      firstDay={1}
+      hideExtraDays={true}
+      markingType={'custom'}
+      markedDates={markedDates}
+      theme={{
+        todayTextColor: 'red',
+        textSectionTitleColor: 'black',
+      }}
+    />
   );
 };

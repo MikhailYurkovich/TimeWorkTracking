@@ -1,4 +1,3 @@
-import React from 'react';
 import {StyleSheet} from 'react-native';
 
 const styleFile = StyleSheet.create({
@@ -11,7 +10,7 @@ const styleFile = StyleSheet.create({
   button: {
     backgroundColor: '#EAEAE8',
     underlayColor: '#BEBEBD',
-    activeOpacity: 0.5,
+    activeOpacity: 0.8,
   },
   text: {
     color: '#070707',

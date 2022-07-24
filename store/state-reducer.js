@@ -15,5 +15,4 @@ export const settingsState = {
   timeEndMin: 0,
   timeStartHour: 8,
   timeStartMin: 0,
-  countriesDinner: [0, 30, 60, 90],
 };

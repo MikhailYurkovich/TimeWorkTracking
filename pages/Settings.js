@@ -1,133 +1,114 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import styleFile from './style';
 import MyDatePicker from './components/DatePicker';
-import TimePicker from './components/TimePicker';
 import {useSelector, useDispatch} from 'react-redux';
 import moment from 'moment/min/moment-with-locales';
+import {BtnSelectDate} from './components/BtnSelectDate';
+import {BtnContainerApply} from './components/BtnContainerApply';
 
 const Settings = ({navigation}) => {
-  const timeSettings = useSelector(state => state.settings);
+  const [visibleDatePickerStart, setvisibleDatePickerStart] = useState(false);
+  const [visibleDatePickerEnd, setvisibleDatePickerEnd] = useState(false);
+  const [visibleTimePicker, setvisibleTimePicker] = useState(false);
+
+  const [timeStart, settimeStart] = useState(
+    useSelector(state =>
+      moment(new Date())
+        .hours(state.settings.timeStartHour)
+        .minutes(state.settings.timeStartMin),
+    ),
+  );
+  const [timeEnd, settimeEnd] = useState(
+    useSelector(state =>
+      moment(new Date())
+        .hours(state.settings.timeEndHour)
+        .minutes(state.settings.timeEndMin),
+    ),
+  );
+  const [timeDinner, settimeDinner] = useState(
+    useSelector(state =>
+      moment(new Date()).hours(0).minutes(state.settings.timeDinner),
+    ),
+  );
   const dispatch = useDispatch();
 
-  const Render = ({timeSettings}) => {
-    const [timeStartModalWin, settimeStartModalWin] = useState(false);
-    const [timeEndModalWin, settimeEndModalWin] = useState(false);
-    const [timeStart, setDateStart] = useState(
-      new Date(
-        new Date().setHours(
-          timeSettings.timeStartHour,
-          timeSettings.timeStartMin,
-          0,
-          0,
-        ),
-      ),
-    );
-    const [timeEnd, setDateEnd] = useState(
-      new Date(
-        new Date().setHours(
-          timeSettings.timeEndHour,
-          timeSettings.timeEndMin,
-          0,
-          0,
-        ),
-      ),
-    );
-    const [timeDinner, setTimeStart] = useState(timeSettings.timeDinner);
-    const countriesDinner = timeSettings.countriesDinner;
-
+  const apply = () => {
     const insertObjSettings = {
-      timeStartHour: timeStart.getHours(),
-      timeStartMin: timeStart.getMinutes(),
-      timeEndHour: timeEnd.getHours(),
-      timeEndMin: timeEnd.getMinutes(),
-      timeDinner: timeDinner,
-      countriesDinner: timeSettings.countriesDinner,
+      timeStartHour: moment(timeStart).hours(),
+      timeStartMin: moment(timeStart).minutes(),
+      timeEndHour: moment(timeEnd).hours(),
+      timeEndMin: moment(timeEnd).minutes(),
+      timeDinner: moment(timeDinner).hour() * 60 + moment(timeDinner).minutes(),
     };
 
-    return (
-      <View>
-        <Text style={styles.titleHeader}>Параметры по умолчанию</Text>
-        <View style={styles.pickerConteiner}>
-          <View style={styles.pickerWrap}>
-            <Text style={[styles.text, styles.titleDatePicker]}>Начало</Text>
-            <TouchableHighlight
-              activeOpacity={styleFile.button.activeOpacity}
-              underlayColor={styleFile.button.underlayColor}
-              onPress={() => {
-                settimeStartModalWin(true);
-              }}
-              style={styles.button}>
-              <Text style={styles.text}>
-                {moment(timeStart).format('HH:mm')}
-              </Text>
-            </TouchableHighlight>
-            <MyDatePicker
-              onChange={setDateStart}
-              date={timeStart}
-              title={'Начало'}
-              formatDate={'HH:mm'}
-              mode={'time'}
-              open={timeStartModalWin}
-              setOpen={settimeStartModalWin}
-            />
-          </View>
-          <View style={styles.pickerWrap}>
-            <Text style={[styles.text, styles.titleDatePicker]}>Конец</Text>
-            <TouchableHighlight
-              activeOpacity={styleFile.button.activeOpacity}
-              underlayColor={styleFile.button.underlayColor}
-              onPress={() => {
-                settimeEndModalWin(true);
-              }}
-              style={styles.button}>
-              <Text style={styles.text}>{moment(timeEnd).format('HH:mm')}</Text>
-            </TouchableHighlight>
-            <MyDatePicker
-              onChange={setDateEnd}
-              date={timeEnd}
-              open={timeEndModalWin}
-              setOpen={settimeEndModalWin}
-              title={'Конец'}
-              formatDate={'HH:mm'}
-              mode={'time'}
-            />
-          </View>
+    dispatch({
+      type: 'UPPDATE_SETTINGS',
+      payload: insertObjSettings,
+    });
+    navigation.goBack();
+  };
 
-          <View style={styles.pickerWrap}>
-            <TimePicker
-              onChange={setTimeStart}
-              timeDinner={timeDinner}
-              countries={countriesDinner}
-              title={'Обед, мин.'}
-            />
-          </View>
-        </View>
-
-        <TouchableHighlight
-          activeOpacity={styleFile.button.activeOpacity}
-          underlayColor={styleFile.button.underlayColor}
-          style={styles.buttonApply}
-          onPress={() => {
-            [
-              dispatch({
-                type: 'UPPDATE_SETTINGS',
-                payload: insertObjSettings,
-              }),
-              navigation.goBack(),
-            ];
-          }}>
-          <Text style={styles.text}>Применить</Text>
-        </TouchableHighlight>
-      </View>
-    );
+  const btnClose = () => {
+    navigation.goBack();
   };
 
   return (
     <View style={styles.view}>
       <View style={styles.applyDate}>
-        <Render timeSettings={timeSettings} />
+        <View>
+          <Text style={styles.titleHeader}>Параметры по умолчанию</Text>
+          <View style={styles.pickerConteiner}>
+            <BtnSelectDate
+              textTitle={'Начало'}
+              text={moment(timeStart).format('HH:mm')}
+              apply={setvisibleDatePickerStart}
+            />
+            <BtnSelectDate
+              textTitle={'Конец'}
+              text={moment(timeEnd).format('HH:mm')}
+              apply={setvisibleDatePickerEnd}
+            />
+            <BtnSelectDate
+              textTitle={'Обед'}
+              text={`${moment(timeDinner).format('H ч. mm мин.')}`}
+              apply={setvisibleTimePicker}
+            />
+            <View style={styles.btnWrap}>
+              <BtnContainerApply
+                btnApply_1={btnClose}
+                btnApply_2={apply}
+                textBtn_1={'Отмена'}
+                textBtn_2={'Применить'}
+              />
+            </View>
+          </View>
+        </View>
       </View>
+      <MyDatePicker
+        onChange={settimeStart}
+        date={timeStart}
+        open={visibleDatePickerStart}
+        setOpen={setvisibleDatePickerStart}
+        title={'Начало'}
+        mode={'time'}
+      />
+      <MyDatePicker
+        onChange={settimeEnd}
+        date={timeEnd}
+        open={visibleDatePickerEnd}
+        setOpen={setvisibleDatePickerEnd}
+        title={'Конец'}
+        mode={'time'}
+      />
+      <MyDatePicker
+        onChange={settimeDinner}
+        date={timeDinner}
+        open={visibleTimePicker}
+        setOpen={setvisibleTimePicker}
+        title={'Обед'}
+        mode={'time'}
+      />
     </View>
   );
 };
@@ -139,56 +120,19 @@ const styles = StyleSheet.create({
     backgroundColor: styleFile.view.backgroundColor,
   },
   applyDate: {
-    margin: '3%',
-    padding: 5,
     backgroundColor: styleFile.window.backgroundColor,
-    borderRadius: 15,
   },
   titleHeader: {
-    alignSelf: 'center',
-    padding: 5,
-    fontSize: 20,
-    fontWeight: 'bold',
     color: styleFile.text.color,
-  },
-  pickerConteiner: {
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignSelf: 'center',
-    marginBottom: 10,
-  },
-
-  pickerWrap: {
-    alignItems: 'center',
-    margin: '2%',
-  },
-
-  titleDatePicker: {
-    marginBottom: 5,
     fontWeight: 'bold',
+    fontSize: 17,
+    textAlign: 'center',
+    padding: 10,
   },
-  button: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    width: 80,
-    backgroundColor: styleFile.button.backgroundColor,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonApply: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    width: 115,
-    borderRadius: 8,
-    backgroundColor: styleFile.button.backgroundColor,
+  btnWrap: {
+    width: 300,
     alignSelf: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  text: {
-    color: styleFile.text.color,
-    fontSize: 18,
+    marginVertical: 8,
   },
 });
 
