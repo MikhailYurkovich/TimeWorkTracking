@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import styleFile from '../style';
 import moment from 'moment';
 import 'moment/locale/ru';
 import {RecordMissing} from './RecordMissing';
-import {queryWorkDayId} from '../../database/allSchemas';
+// import {queryWorkDayId} from '../../database/allSchemas';
 import {calendarSetting} from '../scripts/calendarSetting';
 import {SelectedWorkDay} from './SelectedWorkDay';
 

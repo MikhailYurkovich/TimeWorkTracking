@@ -8,7 +8,6 @@ import styleFile from './style';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-
 const Stack = createStackNavigator();
 
 export default function Navigate() {
@@ -51,42 +50,44 @@ export default function Navigate() {
           tabBarInactiveTintColor: styleFile.tab.color,
           tabBarActiveTintColor: styleFile.tab.colorActive,
         })}>
-        <Stack.Screen
-          name="Main"
-          component={Main}
-          options={{
-            title: 'Учет рабочих часов',
-            headerTitleStyle: {fontSize: 18},
-            tabBarLabelStyle: {fontSize: 10},
-          }}
-        />
-        <Stack.Screen
-          name="Stats"
-          component={Stats}
-          options={{
-            title: 'Статистика',
-            headerTitleStyle: {fontSize: 18},
-            tabBarLabelStyle: {fontSize: 10},
-          }}
-        />
-        <Stack.Screen
-          name="Settings"
-          component={Settings}
-          options={({navigation}) => ({
-            title: 'Настройки',
-            headerRight: false,
-            headerStyle: {
-              backgroundColor: styleFile.view.backgroundColor,
-              borderBottomWidth: 1,
-              borderColor: styleFile.border.borderColor,
-            },
-            headerTintColor: styleFile.text.color,
-            headerTitleStyle: {
-              fontWeight: 'bold',
-              fontSize: 18,
-            },
-          })}
-        />
+        <Stack.Group>
+          <Stack.Screen
+            name="Main"
+            component={Main}
+            options={{
+              title: 'Учет рабочих часов',
+              headerTitleStyle: {fontSize: 18},
+              tabBarLabelStyle: {fontSize: 10},
+            }}
+          />
+          <Stack.Screen
+            name="Stats"
+            component={Stats}
+            options={{
+              title: 'Статистика',
+              headerTitleStyle: {fontSize: 18},
+              tabBarLabelStyle: {fontSize: 10},
+            }}
+          />
+          <Stack.Screen
+            name="Settings"
+            component={Settings}
+            options={({navigation}) => ({
+              title: 'Настройки',
+              headerRight: false,
+              headerStyle: {
+                backgroundColor: styleFile.view.backgroundColor,
+                borderBottomWidth: 1,
+                borderColor: styleFile.border.borderColor,
+              },
+              headerTintColor: styleFile.text.color,
+              headerTitleStyle: {
+                fontWeight: 'bold',
+                fontSize: 18,
+              },
+            })}
+          />
+        </Stack.Group>
       </Stack.Navigator>
     </NavigationContainer>
   );

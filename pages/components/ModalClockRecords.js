@@ -72,49 +72,13 @@ const ModalClockRecords = ({
   };
 
   return (
-    <>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          btnClose();
-        }}>
-        <TouchableWithoutFeedback onPress={() => btnClose()}>
-          <View style={styles.modalOverlay} />
-        </TouchableWithoutFeedback>
-
-        <View style={styles.modalContent}>
-          <View style={styles.modalView}>
-            <Text style={[styles.textTitle, {marginBottom: 3}]}>
-              {moment(selectedDay).calendar(calendarSetting)}
-            </Text>
-            <BtnSelectDate
-              textTitle={'Начало'}
-              text={moment(start).format('HH:mm')}
-              apply={applyVisibleDatePickerStart}
-            />
-            <BtnSelectDate
-              textTitle={'Конец'}
-              text={moment(end).format('HH:mm')}
-              apply={applyVisibleDatePickerEnd}
-            />
-            <BtnSelectDate
-              textTitle={'Обед'}
-              text={`${moment(dinner).format('H ч. mm мин.')}`}
-              apply={applyVisibleTimePicker}
-            />
-            <View style={styles.btnWrap}>
-              <BtnContainerApply
-                btnApply_1={btnClose}
-                btnApply_2={apply1}
-                textBtn_1={'Отмена'}
-                textBtn_2={'Применить'}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        btnClose();
+      }}>
       <MyDatePicker
         onChange={setstart}
         date={start}
@@ -139,7 +103,42 @@ const ModalClockRecords = ({
         title={'Обед'}
         mode={'time'}
       />
-    </>
+
+      <TouchableWithoutFeedback onPress={() => btnClose()}>
+        <View style={styles.modalOverlay} />
+      </TouchableWithoutFeedback>
+
+      <View style={styles.modalContent}>
+        <View style={styles.modalView}>
+          <Text style={[styles.textTitle, {marginBottom: 3}]}>
+            {moment(selectedDay).calendar(calendarSetting)}
+          </Text>
+          <BtnSelectDate
+            textTitle={'Начало'}
+            text={moment(start).format('HH:mm')}
+            apply={applyVisibleDatePickerStart}
+          />
+          <BtnSelectDate
+            textTitle={'Конец'}
+            text={moment(end).format('HH:mm')}
+            apply={applyVisibleDatePickerEnd}
+          />
+          <BtnSelectDate
+            textTitle={'Обед'}
+            text={`${moment(dinner).format('H ч. mm мин.')}`}
+            apply={applyVisibleTimePicker}
+          />
+          <View style={styles.btnWrap}>
+            <BtnContainerApply
+              btnApply_1={btnClose}
+              btnApply_2={apply1}
+              textBtn_1={'Отмена'}
+              textBtn_2={'Применить'}
+            />
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 };
 
