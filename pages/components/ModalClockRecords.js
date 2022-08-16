@@ -12,6 +12,7 @@ import {calendarSetting} from '../scripts/calendarSetting';
 import MyDatePicker from './DatePicker';
 import {BtnSelectDate} from './BtnSelectDate';
 import {BtnContainerApply} from './BtnContainerApply';
+import {BtnInput} from './BtnInput';
 
 const ModalClockRecords = ({
   selectedDay,
@@ -23,10 +24,12 @@ const ModalClockRecords = ({
   apply,
   queryMount,
   workDay,
+  salarySettings,
 }) => {
   const [start, setstart] = useState(null);
   const [end, setend] = useState(null);
   const [dinner, setdinner] = useState(null);
+  const [tarifRate, settarifRate] = useState(NaN);
 
   const [visibleDatePickerStart, setvisibleDatePickerStart] = useState(false);
   const [visibleDatePickerEnd, setvisibleDatePickerEnd] = useState(false);
@@ -41,7 +44,8 @@ const ModalClockRecords = ({
         .toDate(),
     );
     setdinner(timeDinner);
-  }, [timeStart, timeEnd, timeDinner]);
+    settarifRate(salarySettings);
+  }, [timeStart, timeEnd, timeDinner, salarySettings]);
 
   const btnClose = () => {
     setmodalVisible(false);
@@ -57,16 +61,20 @@ const ModalClockRecords = ({
   };
 
   const apply1 = () => {
+    const obj = {
+      timeStart: start,
+      timeEnd: end,
+      timeDinner: dinner,
+      tarifRate: tarifRate,
+      workDay: workDay ? workDay : false,
+      queryMount: queryMount,
+    };
+
     if (start >= end) {
-      apply(
-        start,
-        moment(end).add(1, 'day').toDate(),
-        dinner,
-        queryMount,
-        workDay ? workDay : false,
-      );
+      obj.timeEnd = moment(end).add(1, 'day').toDate();
+      apply(obj);
     } else {
-      apply(start, end, dinner, queryMount, workDay ? workDay : false);
+      apply(obj);
     }
     setmodalVisible(false);
   };
@@ -100,7 +108,7 @@ const ModalClockRecords = ({
         date={dinner}
         open={visibleTimePicker}
         setOpen={setvisibleTimePicker}
-        title={'Обед'}
+        title={'Перерыв'}
         mode={'time'}
       />
 
@@ -124,16 +132,25 @@ const ModalClockRecords = ({
             apply={applyVisibleDatePickerEnd}
           />
           <BtnSelectDate
-            textTitle={'Обед'}
+            textTitle={'Перерыв'}
             text={`${moment(dinner).format('H ч. mm мин.')}`}
             apply={applyVisibleTimePicker}
           />
+          <BtnInput
+            textTitle={'Часовая ставка, р.'}
+            text={`${salarySettings}`}
+            onChange={settarifRate}
+            placeholder={'Ставка'}
+          />
+
           <View style={styles.btnWrap}>
             <BtnContainerApply
               btnApply_1={btnClose}
               btnApply_2={apply1}
               textBtn_1={'Отмена'}
               textBtn_2={'Применить'}
+              colorBtn_1={'red'}
+              colorBtn_2={styleFile.tab.colorActive}
             />
           </View>
         </View>
@@ -162,9 +179,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   btnWrap: {
-    width: 280,
+    width: '100%',
     alignSelf: 'center',
-    marginVertical: 12,
   },
 
   textTitle: {

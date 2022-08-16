@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, TouchableHighlight, Text} from 'react-native';
-import styleFile from '../style';
-import ModalClockRecords from './ModalClockRecords';
-import ModalWinDeleteDay from './ModalWinDeleteDay';
-import {DeleteListWorkId} from '../../database/allSchemas';
+import styleFile from '../../style';
+import ModalClockRecords from '../../components/ModalClockRecords';
+import ModalWinDelete from '../../components/ModalWinDelete';
+import {DeleteListWorkId} from '../../../database/allSchemas';
 import moment from 'moment';
-import {updateDay} from '../scripts/operateDB';
+import {updateDay} from '../../scripts/operateDB';
 
 export const SelectedWorkDay = ({workDay, queryMount, selectedDay}) => {
   const [modalVisible, setmodalVisible] = useState(false);
@@ -13,13 +13,15 @@ export const SelectedWorkDay = ({workDay, queryMount, selectedDay}) => {
   const [timeStart, settimeStart] = useState(null);
   const [timeEnd, settimeEnd] = useState(null);
   const [timeDinner, settimeDinner] = useState(NaN);
-  const [timeWork, settimeWork] = useState(NaN);
+  const [timeWorkObj, settimeWorkObj] = useState(NaN);
+  const [tarifRate, settarifRate] = useState(NaN);
 
   useEffect(() => {
     settimeStart(workDay.timeStart);
     settimeEnd(workDay.timeEnd);
     settimeDinner(moment(new Date()).hour(0).minute(workDay.timeDinner));
-    settimeWork(workDay.timeWork);
+    settimeWorkObj(workDay.timeWorkObj);
+    settarifRate(workDay.salarySettings.tarifRate);
   }, [workDay]);
 
   const deleteDay = () => {
@@ -31,7 +33,7 @@ export const SelectedWorkDay = ({workDay, queryMount, selectedDay}) => {
     <View>
       <View>
         <View style={styles.textWrap}>
-          <Text style={[styles.text, {minWidth: 120}]}>
+          <Text style={[styles.text, styles.textWidth]}>
             {`${moment(timeStart).format('HH:mm')} - ${moment(timeEnd).format(
               'HH:mm',
             )}`}
@@ -40,11 +42,16 @@ export const SelectedWorkDay = ({workDay, queryMount, selectedDay}) => {
           <Text
             style={[
               styles.text,
-              {minWidth: 150},
-            ]}>{`Отработал(а): ${timeWork} ч.`}</Text>
-          <Text style={[styles.text, {minWidth: 120}]}>{`Обед: ${moment(
+              styles.textWidth,
+            ]}>{`${timeWorkObj.hours} ч. ${timeWorkObj.minutes} м.`}</Text>
+          <Text style={[styles.text, styles.textWidth]}>{`Перерыв: ${moment(
             timeDinner,
-          ).format('H ч. mm мин.')}`}</Text>
+          ).format('H ч. m м.')}`}</Text>
+          <Text
+            style={[
+              styles.text,
+              styles.textWidth,
+            ]}>{`Часовая ставка: ${tarifRate} р.`}</Text>
         </View>
 
         <View style={styles.btnWrap}>
@@ -80,9 +87,11 @@ export const SelectedWorkDay = ({workDay, queryMount, selectedDay}) => {
         apply={updateDay}
         queryMount={queryMount}
         workDay={workDay}
+        salarySettings={tarifRate}
       />
-      <ModalWinDeleteDay
-        selectedDay={selectedDay}
+      <ModalWinDelete
+        text={`${moment(selectedDay).format('DD MMMM YYYY')}`}
+        title={'Удалить запись?'}
         setmodalVisible={setmodalVisibleModalDel}
         modalVisible={modalVisibleModalDel}
         apply={deleteDay}
@@ -97,6 +106,9 @@ const styles = StyleSheet.create({
     color: styleFile.text.color,
     padding: 5,
     textAlign: 'center',
+  },
+  textWidth: {
+    minWidth: 160,
   },
   textWrap: {
     flexDirection: 'row',

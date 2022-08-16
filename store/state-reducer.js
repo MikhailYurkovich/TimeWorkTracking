@@ -15,4 +15,5 @@ export const settingsState = {
   timeEndMin: 0,
   timeStartHour: 8,
   timeStartMin: 0,
+  tarifRate: 0,
 };

@@ -12,7 +12,6 @@ import {BtnContainerApply} from './BtnContainerApply';
 
 const MyDatePicker = ({onChange, date, open, setOpen, title, mode}) => {
   const [datePicker, setdatePicker] = useState(new Date());
-
   useEffect(() => {
     setdatePicker(new Date(date));
   }, [date]);
@@ -51,7 +50,7 @@ const MyDatePicker = ({onChange, date, open, setOpen, title, mode}) => {
               onDateChange={setdatePicker}
               is24hourSource={'device'}
               minuteInterval={30}
-              androidVariant={'nativeAndroid'}
+              androidVariant={'iosClone'}
               locale="ru"
               mode={mode}
             />
@@ -62,6 +61,8 @@ const MyDatePicker = ({onChange, date, open, setOpen, title, mode}) => {
               btnApply_2={handleDateChange}
               textBtn_1={'Отмена'}
               textBtn_2={'Применить'}
+              colorBtn_1={'red'}
+              colorBtn_2={styleFile.tab.colorActive}
             />
           </View>
         </View>
@@ -74,13 +75,12 @@ const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
     justifyContent: 'center',
-    width: 280,
+
     alignSelf: 'center',
   },
   modalView: {
     backgroundColor: styleFile.window.backgroundColor,
     borderRadius: 5,
-    padding: 5,
   },
   modalOverlay: {
     position: 'absolute',
@@ -100,8 +100,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   datePickerWrap: {
-    alignItems: 'center',
+    width: '100%',
   },
-  buttonWrap: {width: 230, alignSelf: 'center', marginVertical: 5},
+  buttonWrap: {
+    width: '100%',
+    alignSelf: 'center',
+    marginTop: 8,
+  },
 });
 export default MyDatePicker;

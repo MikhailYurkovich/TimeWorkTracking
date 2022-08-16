@@ -8,7 +8,9 @@ export const ListWork = {
     timeStart: 'date',
     timeEnd: 'date',
     timeDinner: 'int',
-    timeWork: 'double',
+    timeWork: 'int',
+    timeWorkObj: '{}',
+    salarySettings: '{}',
   },
   primaryKey: 'id',
 };
@@ -24,7 +26,7 @@ export const Mounth = {
 const dataBaseOptions = {
   path: 'TimeReal',
   schema: [Mounth, ListWork],
-  schemaVersion: 2,
+  schemaVersion: 1,
 };
 export const insertListWork = insertObj =>
   new Promise((resolve, reject) => {
@@ -49,6 +51,8 @@ export const insertListWork = insertObj =>
             timeEnd: insertObj.timeEnd,
             timeDinner: insertObj.timeDinner,
             timeWork: insertObj.timeWork,
+            timeWorkObj: insertObj.timeWorkObj,
+            salarySettings: insertObj.salarySettings,
           });
 
           const Mounth = realm
@@ -78,6 +82,8 @@ export const updateWorkDay = updateObj =>
           ListWork.timeEnd = updateObj.timeEnd;
           ListWork.timeDinner = updateObj.timeDinner;
           ListWork.timeWork = updateObj.timeWork;
+          ListWork.timeWorkObj = updateObj.timeWorkObj;
+          ListWork.salarySettings = updateObj.salarySettings;
           resolve('ok');
         });
       })
@@ -144,16 +150,23 @@ export const queryWorkDayId = id =>
 //       });
 //   });
 
-export const DeleteAllMounth = () => {
-  Realm.open(dataBaseOptions)
-    .then(realm => {
-      realm.write(() => {
-        realm.delete(realm.objects('Mounth'));
-        realm.delete(realm.objects('ListWork'));
-      });
-    })
-    .catch(error => console.log(error));
-};
+export const clearDB = () =>
+  new Promise((resolve, reject) => {
+    Realm.open(dataBaseOptions)
+      .then(realm => {
+        realm.write(() => {
+          const ListWork = realm.objects('ListWork');
+          const Mounth = realm.objects('Mounth');
+
+          if (ListWork || Mounth) {
+            realm.delete(Mounth);
+            realm.delete(ListWork);
+            resolve(true);
+          }
+        });
+      })
+      .catch(error => console.log(error));
+  });
 
 export const deleteMounthId = idMounth =>
   new Promise((resolve, reject) => {

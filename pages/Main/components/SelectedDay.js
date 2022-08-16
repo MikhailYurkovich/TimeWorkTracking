@@ -1,11 +1,11 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import styleFile from '../style';
+import styleFile from '../../style';
 import moment from 'moment';
 import 'moment/locale/ru';
 import {RecordMissing} from './RecordMissing';
 // import {queryWorkDayId} from '../../database/allSchemas';
-import {calendarSetting} from '../scripts/calendarSetting';
+import {calendarSetting} from '../../scripts/calendarSetting';
 import {SelectedWorkDay} from './SelectedWorkDay';
 
 export const SelectedDay = ({
@@ -14,8 +14,6 @@ export const SelectedDay = ({
   queryMount,
   selectedMount,
 }) => {
-  const date = new Date();
-
   let workDay;
 
   if (
@@ -45,9 +43,11 @@ export const SelectedDay = ({
   return (
     <>
       <View style={styles.view}>
-        <Text style={styles.text}>
-          {moment(selectedDay).calendar(calendarSetting)}
-        </Text>
+        <View style={styles.textWrap}>
+          <Text style={styles.text}>
+            {moment(selectedDay).calendar(calendarSetting)}
+          </Text>
+        </View>
 
         {workDay ? (
           <SelectedWorkDay
@@ -67,12 +67,14 @@ const styles = StyleSheet.create({
   view: {
     backgroundColor: styleFile.window.backgroundColor,
   },
+  textWrap: {
+    borderColor: styleFile.border.borderColor,
+    borderBottomWidth: 1,
+    padding: 10,
+  },
   text: {
     fontSize: 15,
     textAlign: 'center',
     color: styleFile.text.color,
-    borderColor: styleFile.border.borderColor,
-    borderBottomWidth: 1,
-    padding: 10,
   },
 });

@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, TouchableHighlight, Text} from 'react-native';
-import styleFile from '../style';
-import ModalClockRecords from './ModalClockRecords';
+import styleFile from '../../style';
+import ModalClockRecords from '../../components/ModalClockRecords';
 import moment from 'moment';
-import {writeToDB} from '../scripts/operateDB';
+import {writeToDB} from '../../scripts/operateDB';
 import {useSelector} from 'react-redux';
 
 export const RecordMissing = ({selectedDay, queryMount}) => {
@@ -21,6 +21,7 @@ export const RecordMissing = ({selectedDay, queryMount}) => {
   const timeDinner = useSelector(state =>
     moment(selectedDay).hours(0).minutes(state.settings.timeDinner),
   );
+  const tarifRate = useSelector(state => state.settings.tarifRate);
 
   return (
     <>
@@ -62,6 +63,7 @@ export const RecordMissing = ({selectedDay, queryMount}) => {
         timeDinner={timeDinner}
         apply={writeToDB}
         queryMount={queryMount}
+        salarySettings={tarifRate}
       />
     </>
   );

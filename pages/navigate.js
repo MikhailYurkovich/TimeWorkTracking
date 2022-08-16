@@ -1,6 +1,6 @@
 import React from 'react';
-import Main from './Main';
-import Settings from './Settings';
+import Main from './Main/Main';
+import Settings from './Settings/Settings';
 import Stats from './Stats';
 import {Pressable} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -41,23 +41,16 @@ export default function Navigate() {
           headerTintColor: styleFile.text.color,
           headerTitleStyle: {
             fontWeight: 'bold',
-            fontSize: 18,
+            fontSize: 17,
           },
-          tabBarStyle: {
-            backgroundColor: styleFile.view.backgroundColor,
-            borderTopColor: styleFile.border.borderColor,
-          },
-          tabBarInactiveTintColor: styleFile.tab.color,
-          tabBarActiveTintColor: styleFile.tab.colorActive,
+          headerBackVisible: false,
         })}>
         <Stack.Group>
           <Stack.Screen
             name="Main"
             component={Main}
             options={{
-              title: 'Учет рабочих часов',
-              headerTitleStyle: {fontSize: 18},
-              tabBarLabelStyle: {fontSize: 10},
+              title: 'Учет рабочего времени',
             }}
           />
           <Stack.Screen
@@ -65,8 +58,6 @@ export default function Navigate() {
             component={Stats}
             options={{
               title: 'Статистика',
-              headerTitleStyle: {fontSize: 18},
-              tabBarLabelStyle: {fontSize: 10},
             }}
           />
           <Stack.Screen
@@ -75,16 +66,6 @@ export default function Navigate() {
             options={({navigation}) => ({
               title: 'Настройки',
               headerRight: false,
-              headerStyle: {
-                backgroundColor: styleFile.view.backgroundColor,
-                borderBottomWidth: 1,
-                borderColor: styleFile.border.borderColor,
-              },
-              headerTintColor: styleFile.text.color,
-              headerTitleStyle: {
-                fontWeight: 'bold',
-                fontSize: 18,
-              },
             })}
           />
         </Stack.Group>

@@ -7,11 +7,11 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import styleFile from '../style';
-import moment from 'moment';
 import {BtnContainerApply} from './BtnContainerApply';
 
-const ModalWinDeleteDay = ({
-  selectedDay,
+const ModalWinDelete = ({
+  text,
+  title,
   setmodalVisible,
   modalVisible,
   apply,
@@ -35,16 +35,20 @@ const ModalWinDeleteDay = ({
 
         <View style={styles.modalContent}>
           <View style={styles.modalView}>
-            <Text style={styles.textTitle}>Удалить запись?</Text>
-            <Text style={[styles.text, {marginBottom: 5}]}>
-              {` ${moment(selectedDay).format('DD MMMM YYYY')}`}
-            </Text>
+            <Text style={styles.textTitle}>{title}</Text>
+
+            {text ? (
+              <Text style={[styles.text, {marginBottom: 5}]}>{text}</Text>
+            ) : (
+              false
+            )}
             <View style={styles.btnWrap}>
               <BtnContainerApply
                 btnApply_1={btnClose}
                 btnApply_2={apply}
                 textBtn_1={'Отмена'}
                 textBtn_2={'Удалить'}
+                colorBtn_2={'red'}
               />
             </View>
           </View>
@@ -74,9 +78,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   btnWrap: {
-    width: 250,
+    width: '100%',
     alignSelf: 'center',
-    marginVertical: 8,
+    // marginTop: 8,
   },
 
   textTitle: {
@@ -92,4 +96,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-export default ModalWinDeleteDay;
+export default ModalWinDelete;
