@@ -60,6 +60,6 @@ buck-out/
 /ios/Pods/
 /vendor/bundle/
 
-android/gradle/gradle.properties
+android/app/build.gradle
 android/app/timepicker.keystore
 android/gradle.properties
