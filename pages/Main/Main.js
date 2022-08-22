@@ -1,59 +1,43 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {View, StyleSheet, ScrollView, Platform} from 'react-native';
 import styleFile from '../style';
 import moment from 'moment/min/moment-with-locales';
-import {queryListMonth_ListWork_id} from '../../database/allSchemas';
+import {useSelector, useDispatch} from 'react-redux';
 import {CalendarPicker} from './components/Calendar';
 import {SelectedDay} from './components/SelectedDay';
 import {MonthStats} from './components/MonthStats';
+import {querySettings, queryListMonth} from '../../database/allSchemas';
 
 const Main = ({navigation}) => {
-  const [listMonth, setlistMonth] = useState(undefined);
-  const [selectedDay, setselectedDay] = useState(
-    moment(new Date()).format('YYYY-MM-DD'),
-  );
-  const [selectedMount, setselectedMount] = useState(
-    moment(new Date()).format('YYYY-MM-DD'),
-  );
+  const listMonth = useSelector(state => state.listMonth);
+  const selectedMount = useSelector(state => state.selectedMount);
 
-  const queryMount = id => {
-    queryListMonth_ListWork_id(id).then(result => {
-      setlistMonth(result);
-    });
-  };
-
+  const dispatch = useDispatch();
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      queryMount(Number(moment(selectedMount).format('YYYYMM')));
-    });
-    return unsubscribe;
-  }, [navigation, selectedMount]);
+    querySettings(dispatch);
+    queryListMonth(dispatch, Number(moment(selectedMount).format('YYYYMM')));
+  }, [selectedMount]);
 
   return (
-    <ScrollView
-      alwaysBounceVertical={false}
-      contentContainerStyle={styles.view}>
-      <View style={styles.calendarPickerWrap}>
-        <CalendarPicker
-          listMonth={listMonth}
-          queryMount={queryMount}
-          setselectedDay={setselectedDay}
-          selectedDay={selectedDay}
-          setselectedMount={setselectedMount}
-        />
-      </View>
-      <View style={styles.selectedDayWrap}>
-        <SelectedDay
-          selectedDay={selectedDay}
-          listMonth={listMonth}
-          queryMount={queryMount}
-          selectedMount={selectedMount}
-        />
-      </View>
-      <View style={styles.monthStatsWrap}>
-        <MonthStats listMonth={listMonth} navigation={navigation} />
-      </View>
-    </ScrollView>
+    <>
+      <ScrollView
+        alwaysBounceVertical={false}
+        contentContainerStyle={styles.view}>
+        <View style={styles.calendarPickerWrap}>
+          <CalendarPicker listMonth={listMonth} />
+        </View>
+        <View style={styles.selectedDayWrap}>
+          <SelectedDay listMonth={listMonth} />
+        </View>
+        <View style={styles.monthStatsWrap}>
+          <MonthStats
+            listMonth={listMonth}
+            selectedMount={selectedMount}
+            navigation={navigation}
+          />
+        </View>
+      </ScrollView>
+    </>
   );
 };
 

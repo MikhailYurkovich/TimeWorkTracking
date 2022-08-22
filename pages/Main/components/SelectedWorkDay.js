@@ -1,33 +1,22 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, TouchableHighlight, Text} from 'react-native';
 import styleFile from '../../style';
 import ModalClockRecords from '../../components/ModalClockRecords';
 import ModalWinDelete from '../../components/ModalWinDelete';
-import {DeleteListWorkId} from '../../../database/allSchemas';
+import {deleteDay} from '../../../database/allSchemas';
 import moment from 'moment';
-import {updateDay} from '../../scripts/operateDB';
+import {useDispatch} from 'react-redux';
 
-export const SelectedWorkDay = ({workDay, queryMount, selectedDay}) => {
+export const SelectedWorkDay = ({workDay, selectedDay}) => {
+  const timeStart = workDay.timeStart;
+  const timeEnd = workDay.timeEnd;
+  const timeDinner = moment(new Date()).hour(0).minute(workDay.timeDinner);
+  const timeWork = workDay.timeWork;
+  const tarifRate = workDay.salarySettings.tarifRate;
+  const dispatch = useDispatch();
+
   const [modalVisible, setmodalVisible] = useState(false);
   const [modalVisibleModalDel, setmodalVisibleModalDel] = useState(false);
-  const [timeStart, settimeStart] = useState(null);
-  const [timeEnd, settimeEnd] = useState(null);
-  const [timeDinner, settimeDinner] = useState(NaN);
-  const [timeWorkObj, settimeWorkObj] = useState(NaN);
-  const [tarifRate, settarifRate] = useState(NaN);
-
-  useEffect(() => {
-    settimeStart(workDay.timeStart);
-    settimeEnd(workDay.timeEnd);
-    settimeDinner(moment(new Date()).hour(0).minute(workDay.timeDinner));
-    settimeWorkObj(workDay.timeWorkObj);
-    settarifRate(workDay.salarySettings.tarifRate);
-  }, [workDay]);
-
-  const deleteDay = () => {
-    DeleteListWorkId(workDay.id);
-    queryMount(workDay.idMounth);
-  };
 
   return (
     <View>
@@ -39,11 +28,9 @@ export const SelectedWorkDay = ({workDay, queryMount, selectedDay}) => {
             )}`}
           </Text>
 
-          <Text
-            style={[
-              styles.text,
-              styles.textWidth,
-            ]}>{`${timeWorkObj.hours} ч. ${timeWorkObj.minutes} м.`}</Text>
+          <Text style={[styles.text, styles.textWidth]}>
+            {moment(new Date()).hour(0).minute(timeWork).format('H ч. m м.')}
+          </Text>
           <Text style={[styles.text, styles.textWidth]}>{`Перерыв: ${moment(
             timeDinner,
           ).format('H ч. m м.')}`}</Text>
@@ -78,15 +65,11 @@ export const SelectedWorkDay = ({workDay, queryMount, selectedDay}) => {
         </View>
       </View>
       <ModalClockRecords
-        selectedDay={selectedDay}
         modalVisible={modalVisible}
         setmodalVisible={setmodalVisible}
         timeStart={timeStart}
         timeEnd={timeEnd}
         timeDinner={timeDinner}
-        apply={updateDay}
-        queryMount={queryMount}
-        workDay={workDay}
         salarySettings={tarifRate}
       />
       <ModalWinDelete
@@ -94,7 +77,10 @@ export const SelectedWorkDay = ({workDay, queryMount, selectedDay}) => {
         title={'Удалить запись?'}
         setmodalVisible={setmodalVisibleModalDel}
         modalVisible={modalVisibleModalDel}
-        apply={deleteDay}
+        apply={() => [
+          setmodalVisibleModalDel(false),
+          deleteDay(dispatch, Number(moment(selectedDay).format('YYYYMMDD'))),
+        ]}
       />
     </View>
   );

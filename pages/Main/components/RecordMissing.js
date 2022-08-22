@@ -3,25 +3,25 @@ import {View, StyleSheet, TouchableHighlight, Text} from 'react-native';
 import styleFile from '../../style';
 import ModalClockRecords from '../../components/ModalClockRecords';
 import moment from 'moment';
-import {writeToDB} from '../../scripts/operateDB';
 import {useSelector} from 'react-redux';
 
-export const RecordMissing = ({selectedDay, queryMount}) => {
-  const [modalVisible, setmodalVisible] = useState(false);
+export const RecordMissing = ({selectedDay}) => {
   const timeStart = useSelector(state =>
     moment(selectedDay)
-      .hours(state.settings.timeStartHour)
-      .minutes(state.settings.timeStartMin),
+      .hour(state.settings.timeStart.hours)
+      .minute(state.settings.timeStart.minutes),
   );
   const timeEnd = useSelector(state =>
     moment(selectedDay)
-      .hours(state.settings.timeEndHour)
-      .minutes(state.settings.timeEndMin),
+      .hour(state.settings.timeEnd.hours)
+      .minute(state.settings.timeEnd.minutes),
   );
   const timeDinner = useSelector(state =>
-    moment(selectedDay).hours(0).minutes(state.settings.timeDinner),
+    moment(selectedDay).minutes(state.settings.timeDinner),
   );
   const tarifRate = useSelector(state => state.settings.tarifRate);
+
+  const [modalVisible, setmodalVisible] = useState(false);
 
   return (
     <>
@@ -55,14 +55,11 @@ export const RecordMissing = ({selectedDay, queryMount}) => {
         </TouchableHighlight>
       </View>
       <ModalClockRecords
-        selectedDay={selectedDay}
         modalVisible={modalVisible}
         setmodalVisible={setmodalVisible}
         timeStart={timeStart}
         timeEnd={timeEnd}
         timeDinner={timeDinner}
-        apply={writeToDB}
-        queryMount={queryMount}
         salarySettings={tarifRate}
       />
     </>

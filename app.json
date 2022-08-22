@@ -1,4 +1,8 @@
 {
   "name": "TimePicker",
-  "displayName": "TimePicker"
+  "displayName": "TimePicker",
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-8017817006445043~5886711644",
+    "ios_app_id": "ca-app-pub-8017817006445043~5886711644"
+    }
 }

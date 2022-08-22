@@ -9,7 +9,6 @@ export const ListWork = {
     timeEnd: 'date',
     timeDinner: 'int',
     timeWork: 'int',
-    timeWorkObj: '{}',
     salarySettings: '{}',
   },
   primaryKey: 'id',
@@ -23,185 +22,166 @@ export const Mounth = {
   },
   primaryKey: 'id',
 };
+
+export const Settings = {
+  name: 'Settings',
+  properties: {
+    id: 'int',
+    timeStart: '{}',
+    timeEnd: '{}',
+    timeDinner: 'int',
+    tarifRate: 'int',
+  },
+  primaryKey: 'id',
+};
+
 const dataBaseOptions = {
-  path: 'TimeReal',
-  schema: [Mounth, ListWork],
-  schemaVersion: 1,
+  path: 'TimeReal', //TimeReal
+  schema: [Mounth, ListWork, Settings],
+  schemaVersion: 2, //2
+};
+
+export const updateSettings = (dispatch, insertObjSettings) => {
+  return Realm.open(dataBaseOptions).then(realm => {
+    realm.write(() => {
+      const settings = realm.create(
+        'Settings',
+        {
+          id: 1,
+          timeStart: insertObjSettings.timeStart,
+          timeEnd: insertObjSettings.timeEnd,
+          timeDinner: insertObjSettings.timeDinner,
+          tarifRate: insertObjSettings.tarifRate,
+        },
+        'modified',
+      );
+
+      dispatch({
+        type: 'UPPDATE_SETTINGS',
+        payload: settings,
+      });
+    });
+  });
+};
+export const querySettings = dispatch => {
+  return Realm.open(dataBaseOptions).then(realm => {
+    realm.write(() => {
+      const settings = realm.objectForPrimaryKey('Settings', 1);
+      if (settings) {
+        dispatch({
+          type: 'UPPDATE_SETTINGS',
+          payload: settings,
+        });
+      }
+    });
+  });
 };
 export const insertListWork = insertObj =>
-  new Promise((resolve, reject) => {
-    Realm.open(dataBaseOptions)
-      .then(realm => {
-        realm.write(() => {
-          const checkIdDay = realm.objectForPrimaryKey(
-            'ListWork',
-            insertObj.idDay,
-          );
-          realm.create(
-            'Mounth',
-            {
-              id: insertObj.idMounth,
-            },
-            'modified',
-          );
-          const ListWork = realm.create('ListWork', {
-            id: insertObj.idDay,
-            idMounth: insertObj.idMounth,
-            timeStart: insertObj.timeStart,
-            timeEnd: insertObj.timeEnd,
-            timeDinner: insertObj.timeDinner,
-            timeWork: insertObj.timeWork,
-            timeWorkObj: insertObj.timeWorkObj,
-            salarySettings: insertObj.salarySettings,
-          });
+  Realm.open(dataBaseOptions).then(realm => {
+    realm.write(() => {
+      realm.create(
+        'Mounth',
+        {
+          id: insertObj.idMounth,
+        },
+        'modified',
+      );
+      const ListWork = realm.create(
+        'ListWork',
+        {
+          id: insertObj.idDay,
+          idMounth: insertObj.idMounth,
+          timeStart: insertObj.timeStart,
+          timeEnd: insertObj.timeEnd,
+          timeDinner: insertObj.timeDinner,
+          timeWork: insertObj.timeWork,
+          salarySettings: insertObj.salarySettings,
+        },
+        'modified',
+      );
 
-          const Mounth = realm
-            .objects('Mounth')
-            .filtered(`id = ${insertObj.idMounth}`);
+      const Mounth = realm
+        .objects('Mounth')
+        .filtered(`id = ${insertObj.idMounth}`);
 
-          const List = realm
-            .objects('ListWork')
-            .filtered(`idMounth = ${insertObj.idMounth}`);
+      const List = realm
+        .objects('ListWork')
+        .filtered(`idMounth = ${insertObj.idMounth}`)
+        .sorted('id');
 
-          Mounth.forEach(Mounth => {
-            Mounth.listWorks = List;
-            resolve(true);
-          });
+      Mounth.forEach(Mounth => {
+        Mounth.listWorks = List;
+
+        insertObj.dispatch({
+          type: 'UPPDATE_LIST_MONTH',
+          payload: Mounth,
         });
-      })
-      .catch(error => reject(error));
-  });
-
-export const updateWorkDay = updateObj =>
-  new Promise((resolve, reject) => {
-    Realm.open(dataBaseOptions)
-      .then(realm => {
-        realm.write(() => {
-          const ListWork = realm.objectForPrimaryKey('ListWork', updateObj.id);
-          ListWork.timeStart = updateObj.timeStart;
-          ListWork.timeEnd = updateObj.timeEnd;
-          ListWork.timeDinner = updateObj.timeDinner;
-          ListWork.timeWork = updateObj.timeWork;
-          ListWork.timeWorkObj = updateObj.timeWorkObj;
-          ListWork.salarySettings = updateObj.salarySettings;
-          resolve('ok');
-        });
-      })
-      .catch(error => {
-        reject(error);
       });
+    });
   });
-
-export const queryAllListMount_ListWork = () =>
-  new Promise((resolve, reject) => {
-    Realm.open(dataBaseOptions)
-      .then(realm => {
-        realm.write(() => {
-          const allList = realm.objects('Mounth');
-          const allListSorted = allList.sorted('id');
-          resolve(allListSorted.slice(0).reverse());
+export const queryListMonth = (dispatch, id) => {
+  return Realm.open(dataBaseOptions).then(realm => {
+    realm.write(() => {
+      const Mounth = realm.objectForPrimaryKey('Mounth', id);
+      if (Mounth) {
+        dispatch({
+          type: 'UPPDATE_LIST_MONTH',
+          payload: Mounth,
         });
-      })
-      .catch(error => {
-        reject(error);
-      });
-  });
-
-export const queryListMonth_ListWork_id = id =>
-  new Promise((resolve, reject) => {
-    Realm.open(dataBaseOptions)
-      .then(realm => {
-        realm.write(() => {
-          const Mounth = realm.objectForPrimaryKey('Mounth', id);
-          resolve(Mounth);
+      } else {
+        dispatch({
+          type: 'UPPDATE_LIST_MONTH',
+          payload: null,
         });
-      })
-      .catch(error => {
-        reject(error);
-      });
+      }
+    });
   });
+};
+export const deleteDay = (dispatch, id) => {
+  return Realm.open(dataBaseOptions).then(realm => {
+    realm.write(() => {
+      const workDay = realm.objectForPrimaryKey('ListWork', id);
 
-export const queryWorkDayId = id =>
-  new Promise((resolve, reject) => {
-    Realm.open(dataBaseOptions)
-      .then(realm => {
-        realm.write(() => {
-          const workDay = realm.objectForPrimaryKey('ListWork', id);
-          resolve(workDay);
-        });
-      })
-      .catch(error => {
-        reject(error);
-      });
-  });
-
-// export const queryAllListWork = () =>
-//   new Promise((resolve, reject) => {
-//     Realm.open(dataBaseOptions)
-//       .then(realm => {
-//         realm.write(() => {
-//           const allList = realm.objects('ListWork');
-//           const allListSorted = allList.sorted('id');
-//           resolve(allListSorted);
-//         });
-//       })
-//       .catch(error => {
-//         reject(error);
-//       });
-//   });
-
-export const clearDB = () =>
-  new Promise((resolve, reject) => {
-    Realm.open(dataBaseOptions)
-      .then(realm => {
-        realm.write(() => {
-          const ListWork = realm.objects('ListWork');
-          const Mounth = realm.objects('Mounth');
-
-          if (ListWork || Mounth) {
-            realm.delete(Mounth);
-            realm.delete(ListWork);
-            resolve(true);
-          }
-        });
-      })
-      .catch(error => console.log(error));
-  });
-
-export const deleteMounthId = idMounth =>
-  new Promise((resolve, reject) => {
-    Realm.open(dataBaseOptions)
-      .then(realm => {
-        realm.write(() => {
-          const Mounth = realm.objectForPrimaryKey('Mounth', idMounth);
-          const ListWork = realm
-            .objects('ListWork')
-            .filtered(`idMounth = ${idMounth}`);
-          realm.delete(ListWork);
-          realm.delete(Mounth);
-        });
-      })
-      .catch(error => {
-        reject(error);
-      });
-  });
-
-export const DeleteListWorkId = id => {
-  Realm.open(dataBaseOptions)
-    .then(realm => {
-      realm.write(() => {
-        const idDay = realm.objectForPrimaryKey('ListWork', id);
-
-        const idMounth = idDay.idMounth;
-
-        realm.delete(idDay);
+      if (workDay) {
+        const idMounth = workDay.idMounth;
+        realm.delete(workDay);
 
         const Mounth = realm.objectForPrimaryKey('Mounth', idMounth);
-
         if (Mounth.listWorks.length == 0) {
           realm.delete(Mounth);
         }
-      });
-    })
-    .catch(error => console.log(error));
+
+        if (realm.objectForPrimaryKey('Mounth', idMounth)) {
+          dispatch({
+            type: 'UPPDATE_LIST_MONTH',
+            payload: realm.objectForPrimaryKey('Mounth', idMounth),
+          });
+        } else {
+          dispatch({
+            type: 'UPPDATE_LIST_MONTH',
+            payload: null,
+          });
+        }
+      }
+    });
+  });
+};
+
+export const clearDB = dispatch => {
+  Realm.open(dataBaseOptions).then(realm => {
+    realm.write(() => {
+      const ListWork = realm.objects('ListWork');
+      const Mounth = realm.objects('Mounth');
+      const Settings = realm.objects('Settings');
+
+      if ((ListWork && Settings) || (Mounth && Settings)) {
+        realm.delete(Mounth);
+        realm.delete(ListWork);
+        realm.delete(Settings);
+        dispatch({
+          type: 'RESET',
+        });
+      }
+    });
+  });
 };

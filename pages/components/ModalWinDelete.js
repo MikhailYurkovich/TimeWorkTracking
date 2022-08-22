@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     position: 'absolute',
+    flex: 1,
     top: 0,
     bottom: 0,
     left: 0,

@@ -2,6 +2,7 @@ import React from 'react';
 import {Calendar} from 'react-native-calendars';
 import {LocaleConfig} from 'react-native-calendars';
 import moment from 'moment';
+import {useDispatch, useSelector} from 'react-redux';
 
 LocaleConfig.locales['ru'] = {
   monthNames: [
@@ -31,13 +32,10 @@ LocaleConfig.locales['ru'] = {
 };
 LocaleConfig.defaultLocale = 'ru';
 
-export const CalendarPicker = ({
-  listMonth,
-  queryMount,
-  setselectedDay,
-  selectedDay,
-  setselectedMount,
-}) => {
+export const CalendarPicker = ({listMonth}) => {
+  const selectedDay = useSelector(state => state.selectedDay);
+  const dispatch = useDispatch();
+
   let markedDates = {
     [selectedDay]: {
       selected: true,
@@ -67,7 +65,6 @@ export const CalendarPicker = ({
       } else {
         target[moment(new Date(key.timeStart)).format('YYYY-MM-DD')] = {
           selected: true,
-
           disableTouchEvent: false,
         };
       }
@@ -77,15 +74,21 @@ export const CalendarPicker = ({
 
     markedDates = Object.assign(marked, markedDates);
   }
+
   return (
     <Calendar
       initialDate={moment(new Date()).format('YYYY-MM-DD')}
       onMonthChange={month => {
-        queryMount(Number(moment(month.dateString).format('YYYYMM')));
-        setselectedMount(month.dateString);
+        dispatch({
+          type: 'UPPDATE_SELECTED_MOUNT',
+          payload: month.dateString,
+        });
       }}
       onDayPress={day => {
-        setselectedDay(day.dateString);
+        dispatch({
+          type: 'UPPDATE_SELECTED_DAY',
+          payload: day.dateString,
+        });
       }}
       monthFormat={'MMMM yyyy'}
       firstDay={1}

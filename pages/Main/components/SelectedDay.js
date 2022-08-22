@@ -4,62 +4,42 @@ import styleFile from '../../style';
 import moment from 'moment';
 import 'moment/locale/ru';
 import {RecordMissing} from './RecordMissing';
-// import {queryWorkDayId} from '../../database/allSchemas';
 import {calendarSetting} from '../../scripts/calendarSetting';
 import {SelectedWorkDay} from './SelectedWorkDay';
+import {useSelector} from 'react-redux';
 
-export const SelectedDay = ({
-  selectedDay,
-  listMonth,
-  queryMount,
-  selectedMount,
-}) => {
-  let workDay;
+export const SelectedDay = ({listMonth}) => {
+  const selectedMount = useSelector(state => state.selectedMount);
+  const selectedDay = useSelector(state => state.selectedDay);
 
   if (
-    moment(selectedMount).format('YYYYMM') !=
+    moment(selectedMount).format('YYYYMM') !==
     moment(selectedDay).format('YYYYMM')
   ) {
     return <></>;
   }
+
+  let workDay;
   if (listMonth) {
     workDay = listMonth.listWorks.find(el => {
       return el.id == moment(selectedDay).format('YYYYMMDD');
     });
   }
 
-  // const [workDay, setworkDay] = useState(null);
-  // useEffect(() => {
-  //   queryWorkDayId(Number(moment(selectedDay).format('YYYYMMDD'))).then(
-  //     result => {
-
-  //       setworkDay(result);
-  //     },
-  //   );
-  // }, [listMonth, selectedDay]);
-
-  // console.log(workDay);
-
   return (
-    <>
-      <View style={styles.view}>
-        <View style={styles.textWrap}>
-          <Text style={styles.text}>
-            {moment(selectedDay).calendar(calendarSetting)}
-          </Text>
-        </View>
-
-        {workDay ? (
-          <SelectedWorkDay
-            workDay={workDay}
-            queryMount={queryMount}
-            selectedDay={selectedDay}
-          />
-        ) : (
-          <RecordMissing selectedDay={selectedDay} queryMount={queryMount} />
-        )}
+    <View style={styles.view}>
+      <View style={styles.textWrap}>
+        <Text style={styles.text}>
+          {moment(selectedDay).calendar(calendarSetting)}
+        </Text>
       </View>
-    </>
+
+      {workDay ? (
+        <SelectedWorkDay workDay={workDay} selectedDay={selectedDay} />
+      ) : (
+        <RecordMissing selectedDay={selectedDay} />
+      )}
+    </View>
   );
 };
 

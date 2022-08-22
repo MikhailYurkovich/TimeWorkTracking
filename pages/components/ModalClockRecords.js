@@ -13,27 +13,30 @@ import MyDatePicker from './DatePicker';
 import {BtnSelectDate} from './BtnSelectDate';
 import {BtnContainerApply} from './BtnContainerApply';
 import {BtnInput} from './BtnInput';
+import {writeToDB} from '../scripts/operateDB';
+import {useDispatch} from 'react-redux';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 
 const ModalClockRecords = ({
-  selectedDay,
   setmodalVisible,
   modalVisible,
   timeStart,
   timeEnd,
   timeDinner,
-  apply,
-  queryMount,
-  workDay,
   salarySettings,
 }) => {
   const [start, setstart] = useState(null);
   const [end, setend] = useState(null);
   const [dinner, setdinner] = useState(null);
   const [tarifRate, settarifRate] = useState(NaN);
+  const dispatch = useDispatch();
 
   const [visibleDatePickerStart, setvisibleDatePickerStart] = useState(false);
   const [visibleDatePickerEnd, setvisibleDatePickerEnd] = useState(false);
   const [visibleTimePicker, setvisibleTimePicker] = useState(false);
+  const adUnitId = __DEV__
+    ? TestIds.BANNER
+    : 'ca-app-pub-8017817006445043/3662242673';
 
   useEffect(() => {
     setstart(timeStart);
@@ -66,15 +69,14 @@ const ModalClockRecords = ({
       timeEnd: end,
       timeDinner: dinner,
       tarifRate: tarifRate,
-      workDay: workDay ? workDay : false,
-      queryMount: queryMount,
+      dispatch,
     };
 
     if (start >= end) {
       obj.timeEnd = moment(end).add(1, 'day').toDate();
-      apply(obj);
+      writeToDB(obj);
     } else {
-      apply(obj);
+      writeToDB(obj);
     }
     setmodalVisible(false);
   };
@@ -119,7 +121,7 @@ const ModalClockRecords = ({
       <View style={styles.modalContent}>
         <View style={styles.modalView}>
           <Text style={[styles.textTitle, {marginBottom: 3}]}>
-            {moment(selectedDay).calendar(calendarSetting)}
+            {moment(timeStart).calendar(calendarSetting)}
           </Text>
           <BtnSelectDate
             textTitle={'Начало'}
@@ -155,6 +157,9 @@ const ModalClockRecords = ({
           </View>
         </View>
       </View>
+      <View>
+        <BannerAd size={BannerAdSize.BANNER} unitId={adUnitId} />
+      </View>
     </Modal>
   );
 };
@@ -172,6 +177,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     position: 'absolute',
+    flex: 1,
     top: 0,
     bottom: 0,
     left: 0,

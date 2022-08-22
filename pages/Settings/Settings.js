@@ -13,7 +13,7 @@ import moment from 'moment/min/moment-with-locales';
 import {BtnSelectDate} from '../components/BtnSelectDate';
 import {BtnContainerApply} from '../components/BtnContainerApply';
 import ModalWinDelete from '../components/ModalWinDelete';
-import {clearDB} from '../../database/allSchemas';
+import {clearDB, updateSettings} from '../../database/allSchemas';
 import {BtnInput} from '../components/BtnInput';
 
 const Settings = ({navigation}) => {
@@ -24,22 +24,22 @@ const Settings = ({navigation}) => {
 
   const [timeStart, settimeStart] = useState(
     useSelector(state =>
-      moment(new Date())
-        .hours(state.settings.timeStartHour)
-        .minutes(state.settings.timeStartMin),
+      moment({
+        hour: state.settings.timeStart.hours,
+        minute: state.settings.timeStart.minutes,
+      }),
     ),
   );
   const [timeEnd, settimeEnd] = useState(
     useSelector(state =>
-      moment(new Date())
-        .hours(state.settings.timeEndHour)
-        .minutes(state.settings.timeEndMin),
+      moment({
+        hour: state.settings.timeEnd.hours,
+        minute: state.settings.timeEnd.minutes,
+      }),
     ),
   );
   const [timeDinner, settimeDinner] = useState(
-    useSelector(state =>
-      moment(new Date()).hours(0).minutes(state.settings.timeDinner),
-    ),
+    useSelector(state => moment().hours(0).minutes(state.settings.timeDinner)),
   );
   const [tarifRate, settarifRate] = useState(
     useSelector(state => state.settings.tarifRate),
@@ -48,18 +48,12 @@ const Settings = ({navigation}) => {
 
   const apply = () => {
     const insertObjSettings = {
-      timeStartHour: moment(timeStart).hours(),
-      timeStartMin: moment(timeStart).minutes(),
-      timeEndHour: moment(timeEnd).hours(),
-      timeEndMin: moment(timeEnd).minutes(),
+      timeStart: moment(timeStart).toObject(),
+      timeEnd: moment(timeEnd).toObject(),
       timeDinner: moment(timeDinner).hour() * 60 + moment(timeDinner).minutes(),
       tarifRate: tarifRate,
     };
-
-    dispatch({
-      type: 'UPPDATE_SETTINGS',
-      payload: insertObjSettings,
-    });
+    updateSettings(dispatch, insertObjSettings);
     navigation.goBack();
   };
 
@@ -68,9 +62,9 @@ const Settings = ({navigation}) => {
   };
 
   const btnClearСache = () => {
-    clearDB().then(record => {
-      setvisibleClearCache(false);
-    });
+    clearDB(dispatch);
+    setvisibleClearCache(false);
+    navigation.goBack();
   };
 
   return (
