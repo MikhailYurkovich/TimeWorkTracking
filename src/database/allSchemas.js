@@ -30,7 +30,7 @@ export const Settings = {
     timeStart: '{}',
     timeEnd: '{}',
     timeDinner: 'int',
-    tarifRate: 'int',
+    tarifRate: 'double',
   },
   primaryKey: 'id',
 };
@@ -38,7 +38,7 @@ export const Settings = {
 const dataBaseOptions = {
   path: 'TimeReal', //TimeReal
   schema: [Mounth, ListWork, Settings],
-  schemaVersion: 2, //2
+  schemaVersion: 3, //3
 };
 
 export const updateSettings = (dispatch, insertObjSettings) => {
@@ -67,6 +67,7 @@ export const querySettings = dispatch => {
   return Realm.open(dataBaseOptions).then(realm => {
     realm.write(() => {
       const settings = realm.objectForPrimaryKey('Settings', 1);
+
       if (settings) {
         dispatch({
           type: 'UPPDATE_SETTINGS',

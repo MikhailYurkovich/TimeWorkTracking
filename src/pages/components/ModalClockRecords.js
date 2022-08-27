@@ -151,13 +151,11 @@ const ModalClockRecords = ({
               btnApply_2={apply1}
               textBtn_1={'Отмена'}
               textBtn_2={'Применить'}
-              colorBtn_1={'red'}
-              colorBtn_2={styleFile.tab.colorActive}
             />
           </View>
         </View>
       </View>
-      <View>
+      <View style={styles.banner}>
         <BannerAd size={BannerAdSize.BANNER} unitId={adUnitId} />
       </View>
     </Modal>
@@ -195,6 +193,10 @@ const styles = StyleSheet.create({
     fontSize: 17,
     textAlign: 'center',
     padding: 10,
+  },
+  banner: {
+    bottom: 0,
+    alignItems: 'center',
   },
 });
 export default ModalClockRecords;

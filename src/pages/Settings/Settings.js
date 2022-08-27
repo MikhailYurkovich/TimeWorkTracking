@@ -113,8 +113,6 @@ const Settings = ({navigation}) => {
                 btnApply_2={apply}
                 textBtn_1={'Отмена'}
                 textBtn_2={'Применить'}
-                colorBtn_1={'red'}
-                colorBtn_2={styleFile.tab.colorActive}
               />
             </View>
           </View>

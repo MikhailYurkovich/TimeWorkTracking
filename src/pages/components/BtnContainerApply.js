@@ -15,7 +15,7 @@ export const BtnContainerApply = ({
       <TouchableHighlight
         underlayColor={styleFile.button.underlayColor}
         activeOpacity={styleFile.button.activeOpacity}
-        style={[styles.button, {borderBottomLeftRadius: 5}]}
+        style={[styles.button, styles.border, {borderBottomLeftRadius: 5}]}
         onPress={() => {
           btnApply_1();
         }}>
@@ -30,14 +30,25 @@ export const BtnContainerApply = ({
       <TouchableHighlight
         underlayColor={styleFile.button.underlayColor}
         activeOpacity={styleFile.button.activeOpacity}
-        style={[styles.button, {borderBottomRightRadius: 5}]}
+        style={[
+          styles.button,
+          styles.border,
+          {
+            borderBottomRightRadius: 5,
+            borderLeftWidth: 1,
+            borderLeftColor: styleFile.border.borderColor,
+          },
+        ]}
         onPress={() => {
           btnApply_2();
         }}>
         <Text
           style={[
             styles.text,
-            {color: colorBtn_2 ? colorBtn_2 : styleFile.text.color},
+            {
+              color: colorBtn_2 ? colorBtn_2 : styleFile.text.color,
+              fontWeight: 'bold',
+            },
           ]}>
           {textBtn_2}
         </Text>
@@ -52,10 +63,16 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     flexDirection: 'row',
   },
+  border: {
+    borderTopColor: styleFile.border.borderColor,
+    borderTopWidth: 1,
+    marginTop: -1,
+  },
   button: {
     backgroundColor: styleFile.window.backgroundColor,
     flex: 1,
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 12,
     minWidth: 100,
   },
   text: {

@@ -1,11 +1,11 @@
 import React from 'react';
-import MainStack from './pages/navigate';
+import MainStack from './src/pages/navigate';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 
 import {TextInput, Text} from 'react-native';
 
-import {rootReducer} from './store/reducers';
+import {rootReducer} from './src/store/reducers';
 
 function App() {
   const store = createStore(rootReducer);

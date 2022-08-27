@@ -1,19 +1,21 @@
 import React from 'react';
 import Main from './Main/Main';
 import Settings from './Settings/Settings';
-import Stats from './Stats';
+import Stats from './Stats/Stats';
 import {Pressable} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import styleFile from './style';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+
 const Stack = createStackNavigator();
 
 export default function Navigate() {
   return (
     <NavigationContainer>
       <Stack.Navigator
+        initialRouteName="Main"
         screenOptions={({navigation}) => ({
           headerRight: () => (
             <Pressable onPress={() => navigation.navigate('Settings')}>
@@ -32,7 +34,6 @@ export default function Navigate() {
               )}
             </Pressable>
           ),
-
           headerStyle: {
             backgroundColor: styleFile.view.backgroundColor,
             borderBottomWidth: 1,
@@ -43,33 +44,37 @@ export default function Navigate() {
             fontWeight: 'bold',
             fontSize: 17,
           },
-          headerBackVisible: false,
+          headerTitleAlign: 'center',
         })}>
-        <Stack.Group>
-          <Stack.Screen
-            name="Main"
-            component={Main}
-            options={{
-              title: 'Учет рабочего времени',
-            }}
-          />
-          <Stack.Screen
-            name="Stats"
-            component={Stats}
-            options={{
-              title: 'Статистика',
-            }}
-          />
-          <Stack.Screen
-            name="Settings"
-            component={Settings}
-            options={({navigation}) => ({
-              title: 'Настройки',
-              headerRight: false,
-            })}
-          />
-        </Stack.Group>
+        <Stack.Screen
+          name="Main"
+          component={Main}
+          options={{
+            title: 'Главная',
+          }}
+        />
+
+        <Stack.Screen
+          name="Settings"
+          component={Settings}
+          options={({navigation}) => ({
+            title: 'Настройки',
+            headerRight: false,
+          })}
+        />
+        <Stack.Screen
+          name="Stats"
+          component={Stats}
+          options={{
+            title: 'Статистика',
+            headerRight: false,
+            //вылетает приложение когда очистка кэша
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
+}
+
+{
 }

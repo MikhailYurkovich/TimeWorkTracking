@@ -61,8 +61,6 @@ const MyDatePicker = ({onChange, date, open, setOpen, title, mode}) => {
               btnApply_2={handleDateChange}
               textBtn_1={'Отмена'}
               textBtn_2={'Применить'}
-              colorBtn_1={'red'}
-              colorBtn_2={styleFile.tab.colorActive}
             />
           </View>
         </View>

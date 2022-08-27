@@ -54,7 +54,13 @@ export const SelectedWorkDay = ({workDay, selectedDay}) => {
           <TouchableHighlight
             underlayColor={styleFile.button.underlayColor}
             activeOpacity={styleFile.button.activeOpacity}
-            style={styles.btn}
+            style={[
+              styles.btn,
+              {
+                borderLeftWidth: 1,
+                borderLeftColor: styleFile.border.borderColor,
+              },
+            ]}
             onPress={() => {
               setmodalVisible(true);
             }}>
@@ -112,6 +118,7 @@ const styles = StyleSheet.create({
   btn: {
     minWidth: 100,
     flex: 1,
-    padding: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 7,
   },
 });
