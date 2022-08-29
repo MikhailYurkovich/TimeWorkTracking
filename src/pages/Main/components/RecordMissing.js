@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   text: {
-    fontSize: 15,
+    fontSize: styleFile.text.fontSize,
     color: styleFile.text.color,
-    padding: 10,
+    padding: 12,
   },
 });

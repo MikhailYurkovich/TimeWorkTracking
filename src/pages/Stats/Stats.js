@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import styleFile from '../style';
 import {Table, TableWrapper, Cell} from 'react-native-table-component';
@@ -7,25 +7,6 @@ import moment from 'moment';
 
 const Stats = ({navigation}) => {
   const listMonth = useSelector(state => state.listMonth);
-  const [timeWork, settimeWork] = useState(NaN);
-  const [salary, setsalary] = useState(NaN);
-
-  const timeWorkSum = listMonth => {
-    let sum = 0;
-    let sumSalary = 0;
-
-    if (listMonth) {
-      for (let i = 0; i < listMonth.listWorks.length; i++) {
-        sum += listMonth.listWorks[i].timeWork;
-        sumSalary +=
-          (listMonth.listWorks[i].timeWork / 60) *
-          listMonth.listWorks[i].salarySettings.tarifRate;
-      }
-    }
-
-    setsalary(Math.round(sumSalary * Math.pow(10, 2)) / Math.pow(10, 2));
-    settimeWork(sum / 60);
-  };
 
   if (!listMonth) {
     return (
@@ -36,18 +17,6 @@ const Stats = ({navigation}) => {
       </View>
     );
   }
-
-  useEffect(() => {
-    timeWorkSum(listMonth);
-    // const unsubscribe = navigation.addListener('focus', () => {
-    //   timeWorkSum(listMonth);
-    //   Orientation.unlockAllOrientations();
-    // });
-
-    // return () => {
-    //   Orientation.lockToPortrait(), unsubscribe;
-    // };
-  }, [listMonth]);
 
   const widthArr = [95, 125, 100, 100, 100, 120];
 
@@ -144,12 +113,16 @@ const Stats = ({navigation}) => {
               })}
               <TableWrapper style={styles.tableWrapper}>
                 <Cell
-                  data={`Итого: ${timeWork} ч.`}
+                  data={`Итого: ${
+                    listMonth ? listMonth.fullTimeFullSalary.timeWork : 0
+                  } ч.`}
                   textStyle={styles.textStyleTable}
                   width={320}
                 />
                 <Cell
-                  data={`Заработная плата: ${salary} р.`}
+                  data={`Заработная плата: ${
+                    listMonth ? listMonth.fullTimeFullSalary.salary : 0
+                  } р.`}
                   textStyle={styles.textStyleTable}
                   width={320}
                 />
@@ -178,7 +151,7 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     color: styleFile.text.color,
-    fontSize: 16,
+    fontSize: styleFile.text.fontSize,
     fontWeight: 'bold',
     textAlign: 'center',
     margin: 5,
@@ -188,7 +161,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 5,
     color: styleFile.text.color,
-    fontSize: 16,
+    fontSize: styleFile.text.fontSize,
   },
 });
 

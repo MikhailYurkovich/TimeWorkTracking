@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -10,38 +10,11 @@ import styleFile from '../../style';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 export const MonthStats = ({listMonth, navigation, selectedMount}) => {
-  const [timeWork, settimeWork] = useState(NaN);
-  const [salary, setsalary] = useState(NaN);
-
-  const timeWorkSum = listMonth => {
-    let sum = 0;
-    let sumSalary = 0;
-
-    if (listMonth) {
-      for (let i = 0; i < listMonth.listWorks.length; i++) {
-        sum += listMonth.listWorks[i].timeWork;
-        sumSalary +=
-          (listMonth.listWorks[i].timeWork / 60) *
-          listMonth.listWorks[i].salarySettings.tarifRate;
-      }
-    }
-
-    setsalary(Math.round(sumSalary * Math.pow(10, 2)) / Math.pow(10, 2));
-    settimeWork(sum / 60);
-  };
-
-  useEffect(() => {
-    timeWorkSum(listMonth);
-  }, [listMonth]);
-
-  /* <View style={styles.banner}>
-            <BannerAd size={BannerAdSize.BANNER} unitId={adUnitId} />
-          </View> */
-
   return (
     <TouchableHighlight
       underlayColor={styleFile.button.underlayColor}
       activeOpacity={styleFile.button.activeOpacity}
+      style={styles.button}
       onPress={() =>
         navigation.navigate('Stats', {
           selectedMount: selectedMount,
@@ -49,8 +22,12 @@ export const MonthStats = ({listMonth, navigation, selectedMount}) => {
       }>
       <View style={styles.wrap}>
         <View style={[styles.textWrap]}>
-          <Text style={[styles.text]}>{`Итого: ${timeWork} ч.`}</Text>
-          <Text style={styles.text}>{`Заработная плата: ${salary} р.`}</Text>
+          <Text style={[styles.text, {paddingBottom: 2}]}>{`Итого: ${
+            listMonth ? listMonth.fullTimeFullSalary.timeWork : 0
+          } ч.`}</Text>
+          <Text style={styles.text}>{`Заработная плата: ${
+            listMonth ? listMonth.fullTimeFullSalary.salary : 0
+          } р.`}</Text>
         </View>
         <Icon name={'table'} style={styles.icon} />
       </View>
@@ -62,7 +39,10 @@ const styles = StyleSheet.create({
   wrap: {
     flexDirection: 'row',
     marginHorizontal: 15,
+  },
+  button: {
     paddingBottom: Platform.OS === 'ios' ? 20 : 0,
+    backgroundColor: styleFile.window.backgroundColor,
   },
   textWrap: {
     flex: 3,
@@ -70,7 +50,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: styleFile.text.color,
-    fontSize: 15,
+    fontSize: styleFile.text.fontSize,
   },
   icon: {
     fontSize: 26,

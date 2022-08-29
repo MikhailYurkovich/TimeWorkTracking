@@ -94,7 +94,7 @@ export const SelectedWorkDay = ({workDay, selectedDay}) => {
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 15,
+    fontSize: styleFile.text.fontSize,
     color: styleFile.text.color,
     padding: 5,
     textAlign: 'center',

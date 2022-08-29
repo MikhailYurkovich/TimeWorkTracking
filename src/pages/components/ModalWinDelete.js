@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: styleFile.text.color,
-    fontSize: 15,
+    fontSize: styleFile.text.fontSize,
     textAlign: 'center',
   },
 });

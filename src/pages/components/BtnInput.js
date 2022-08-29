@@ -12,7 +12,11 @@ export const BtnInput = ({textTitle, text, onChange, placeholder}) => {
         keyboardType="numeric"
         selectTextOnFocus={true}
         onEndEditing={({nativeEvent: {text}}) => {
-          onChange(Number(text.replace(/[,-]/, '.')));
+          onChange(
+            Number(text.replace(/[,-]/g, '.'))
+              ? Number(text.replace(/[,-]/g, '.'))
+              : 0,
+          );
         }}
         defaultValue={text}
         placeholder={placeholder}
@@ -31,7 +35,7 @@ const styles = StyleSheet.create({
   text: {
     color: styleFile.text.color,
     padding: 10,
-    fontSize: 15,
+    fontSize: styleFile.text.fontSize,
   },
   textTitle: {
     fontWeight: 'bold',

@@ -3,6 +3,7 @@ import {Calendar} from 'react-native-calendars';
 import {LocaleConfig} from 'react-native-calendars';
 import moment from 'moment';
 import {useDispatch, useSelector} from 'react-redux';
+import styleFile from '../../style';
 
 LocaleConfig.locales['ru'] = {
   monthNames: [
@@ -98,6 +99,10 @@ export const CalendarPicker = ({listMonth}) => {
       theme={{
         todayTextColor: 'red',
         textSectionTitleColor: 'black',
+        textMonthFontWeight: 'bold',
+        textDayHeaderFontWeight: 'bold',
+        textDayFontSize: styleFile.text.fontSize,
+        monthTextColor: styleFile.text.color,
       }}
     />
   );

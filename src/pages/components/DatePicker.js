@@ -73,7 +73,6 @@ const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
     justifyContent: 'center',
-
     alignSelf: 'center',
   },
   modalView: {

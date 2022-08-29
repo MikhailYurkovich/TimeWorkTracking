@@ -14,16 +14,15 @@ const styleFile = StyleSheet.create({
   },
   text: {
     color: '#070707',
+    fontSize: 16,
   },
   tab: {
     color: '#070707',
     colorActive: '#0880F9',
   },
-  statusBar: {
-    backgroundColor: '#F2F1F7',
-  },
   border: {
     borderColor: '#C5C5C5',
+    width: 1,
   },
   touchButton: {
     color: '#fff',

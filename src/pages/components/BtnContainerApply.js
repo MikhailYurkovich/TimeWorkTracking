@@ -77,6 +77,6 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    fontSize: 15,
+    fontSize: styleFile.text.fontSize,
   },
 });

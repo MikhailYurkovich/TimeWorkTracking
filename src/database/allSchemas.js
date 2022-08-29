@@ -1,4 +1,5 @@
 import Realm from 'realm';
+import {CalculateState} from '../pages/scripts/calculateState';
 
 export const ListWork = {
   name: 'ListWork',
@@ -112,7 +113,8 @@ export const insertListWork = insertObj =>
 
       Mounth.forEach(Mounth => {
         Mounth.listWorks = List;
-
+        const fullTimeFullSalary = new CalculateState(Mounth);
+        Mounth['fullTimeFullSalary'] = fullTimeFullSalary.timeWork_Salary;
         insertObj.dispatch({
           type: 'UPPDATE_LIST_MONTH',
           payload: Mounth,
@@ -125,6 +127,8 @@ export const queryListMonth = (dispatch, id) => {
     realm.write(() => {
       const Mounth = realm.objectForPrimaryKey('Mounth', id);
       if (Mounth) {
+        const fullTimeFullSalary = new CalculateState(Mounth);
+        Mounth['fullTimeFullSalary'] = fullTimeFullSalary.timeWork_Salary;
         dispatch({
           type: 'UPPDATE_LIST_MONTH',
           payload: Mounth,
@@ -152,10 +156,13 @@ export const deleteDay = (dispatch, id) => {
           realm.delete(Mounth);
         }
 
-        if (realm.objectForPrimaryKey('Mounth', idMounth)) {
+        const MounthNew = realm.objectForPrimaryKey('Mounth', idMounth);
+        if (MounthNew) {
+          const fullTimeFullSalary = new CalculateState(MounthNew);
+          MounthNew['fullTimeFullSalary'] = fullTimeFullSalary.timeWork_Salary;
           dispatch({
             type: 'UPPDATE_LIST_MONTH',
-            payload: realm.objectForPrimaryKey('Mounth', idMounth),
+            payload: MounthNew,
           });
         } else {
           dispatch({

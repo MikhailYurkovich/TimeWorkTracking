@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -17,138 +17,151 @@ import {clearDB, updateSettings} from '../../database/allSchemas';
 import {BtnInput} from '../components/BtnInput';
 
 const Settings = ({navigation}) => {
-  const [visibleDatePickerStart, setvisibleDatePickerStart] = useState(false);
-  const [visibleDatePickerEnd, setvisibleDatePickerEnd] = useState(false);
-  const [visibleTimePicker, setvisibleTimePicker] = useState(false);
-  const [visibleClearCache, setvisibleClearCache] = useState(false);
+  const timeStart = useSelector(state =>
+    moment({
+      hour: state.settings.timeStart.hours,
+      minute: state.settings.timeStart.minutes,
+    }),
+  );
+  const timeEnd = useSelector(state =>
+    moment({
+      hour: state.settings.timeEnd.hours,
+      minute: state.settings.timeEnd.minutes,
+    }),
+  );
+  const timeDinner = useSelector(state =>
+    moment().hours(0).minutes(state.settings.timeDinner),
+  );
+  const tarifRate = useSelector(state => state.settings.tarifRate);
 
-  const [timeStart, settimeStart] = useState(
-    useSelector(state =>
-      moment({
-        hour: state.settings.timeStart.hours,
-        minute: state.settings.timeStart.minutes,
-      }),
-    ),
-  );
-  const [timeEnd, settimeEnd] = useState(
-    useSelector(state =>
-      moment({
-        hour: state.settings.timeEnd.hours,
-        minute: state.settings.timeEnd.minutes,
-      }),
-    ),
-  );
-  const [timeDinner, settimeDinner] = useState(
-    useSelector(state => moment().hours(0).minutes(state.settings.timeDinner)),
-  );
-  const [tarifRate, settarifRate] = useState(
-    useSelector(state => state.settings.tarifRate),
-  );
-  const dispatch = useDispatch();
+  const SettingsView = ({timeStart, timeEnd, timeDinner, tarifRate}) => {
+    const [start, setStart] = useState(timeStart);
+    const [end, setEnd] = useState(timeEnd);
+    const [dinner, setDinner] = useState(timeDinner);
+    const [tarif, setTarif] = useState(tarifRate);
 
-  const apply = () => {
-    const insertObjSettings = {
-      timeStart: moment(timeStart).toObject(),
-      timeEnd: moment(timeEnd).toObject(),
-      timeDinner: moment(timeDinner).hour() * 60 + moment(timeDinner).minutes(),
-      tarifRate: tarifRate,
+    const [visibleDatePickerStart, setVisibleDatePickerStart] = useState(false);
+    const [visibleDatePickerEnd, setVisibleDatePickerEnd] = useState(false);
+    const [visibleTimePicker, setVisibleTimePicker] = useState(false);
+    const [visibleClearCache, setVisibleClearCache] = useState(false);
+
+    const dispatch = useDispatch();
+
+    const apply = () => {
+      const insertObjSettings = {
+        timeStart: moment(start).toObject(),
+        timeEnd: moment(end).toObject(),
+        timeDinner: moment(dinner).hour() * 60 + moment(dinner).minutes(),
+        tarifRate: tarif,
+      };
+      updateSettings(dispatch, insertObjSettings);
+      navigation.goBack();
     };
-    updateSettings(dispatch, insertObjSettings);
-    navigation.goBack();
-  };
 
-  const btnClose = () => {
-    navigation.goBack();
-  };
+    const btnClose = () => {
+      navigation.goBack();
+    };
 
-  const btnClearСache = () => {
-    clearDB(dispatch);
-    setvisibleClearCache(false);
-    navigation.goBack();
-  };
+    const btnClearСache = () => {
+      clearDB(dispatch);
+      setVisibleClearCache(false);
 
-  return (
-    <ScrollView
-      alwaysBounceVertical={false}
-      contentContainerStyle={styles.view}>
-      <View style={styles.clearСache}>
-        <TouchableHighlight
-          activeOpacity={styleFile.button.activeOpacity}
-          underlayColor={styleFile.button.underlayColor}
-          style={styles.clearСacheBtn}
-          onPress={() => {
-            setvisibleClearCache(true);
-          }}>
-          <Text style={styles.text}>Очистить кэш приложения</Text>
-        </TouchableHighlight>
-      </View>
-      <View style={styles.applyDate}>
-        <View>
-          <Text style={styles.titleHeader}>Параметры по умолчанию</Text>
-          <View style={styles.pickerConteiner}>
-            <BtnSelectDate
-              textTitle={'Начало'}
-              text={moment(timeStart).format('HH:mm')}
-              apply={setvisibleDatePickerStart}
-            />
-            <BtnSelectDate
-              textTitle={'Конец'}
-              text={moment(timeEnd).format('HH:mm')}
-              apply={setvisibleDatePickerEnd}
-            />
-            <BtnSelectDate
-              textTitle={'Обед'}
-              text={`${moment(timeDinner).format('H ч. mm мин.')}`}
-              apply={setvisibleTimePicker}
-            />
-            <BtnInput
-              textTitle={'Часовая ставка, р.'}
-              text={`${tarifRate}`}
-              onChange={settarifRate}
-              placeholder={'Ставка'}
-            />
-            <View style={styles.btnWrap}>
-              <BtnContainerApply
-                btnApply_1={btnClose}
-                btnApply_2={apply}
-                textBtn_1={'Отмена'}
-                textBtn_2={'Применить'}
+      // navigation.goBack();
+    };
+
+    return (
+      <ScrollView
+        alwaysBounceVertical={false}
+        contentContainerStyle={styles.view}>
+        <View style={styles.clearСache}>
+          <TouchableHighlight
+            activeOpacity={styleFile.button.activeOpacity}
+            underlayColor={styleFile.button.underlayColor}
+            style={styles.clearСacheBtn}
+            onPress={() => {
+              setVisibleClearCache(true);
+            }}>
+            <Text style={styles.text}>Очистить кэш приложения</Text>
+          </TouchableHighlight>
+        </View>
+        <View style={styles.applyDate}>
+          <View>
+            <Text style={styles.titleHeader}>Параметры по умолчанию</Text>
+            <View style={styles.pickerConteiner}>
+              <BtnSelectDate
+                textTitle={'Начало'}
+                text={moment(start).format('HH:mm')}
+                apply={setVisibleDatePickerStart}
               />
+              <BtnSelectDate
+                textTitle={'Конец'}
+                text={moment(end).format('HH:mm')}
+                apply={setVisibleDatePickerEnd}
+              />
+              <BtnSelectDate
+                textTitle={'Обед'}
+                text={`${moment(dinner).format('H ч. mm мин.')}`}
+                apply={setVisibleTimePicker}
+              />
+              <BtnInput
+                textTitle={'Часовая ставка, р.'}
+                text={`${tarif}`}
+                onChange={setTarif}
+                placeholder={'Ставка'}
+              />
+              <View style={styles.btnWrap}>
+                <BtnContainerApply
+                  btnApply_1={btnClose}
+                  btnApply_2={apply}
+                  textBtn_1={'Отмена'}
+                  textBtn_2={'Применить'}
+                />
+              </View>
             </View>
           </View>
         </View>
-      </View>
-      <ModalWinDelete
-        title={'Очистить кэш?'}
-        setmodalVisible={setvisibleClearCache}
-        modalVisible={visibleClearCache}
-        apply={btnClearСache}
-      />
-      <MyDatePicker
-        onChange={settimeStart}
-        date={timeStart}
-        open={visibleDatePickerStart}
-        setOpen={setvisibleDatePickerStart}
-        title={'Начало'}
-        mode={'time'}
-      />
-      <MyDatePicker
-        onChange={settimeEnd}
-        date={timeEnd}
-        open={visibleDatePickerEnd}
-        setOpen={setvisibleDatePickerEnd}
-        title={'Конец'}
-        mode={'time'}
-      />
-      <MyDatePicker
-        onChange={settimeDinner}
-        date={timeDinner}
-        open={visibleTimePicker}
-        setOpen={setvisibleTimePicker}
-        title={'Обед'}
-        mode={'time'}
-      />
-    </ScrollView>
+
+        <ModalWinDelete
+          title={'Очистить кэш?'}
+          setmodalVisible={setVisibleClearCache}
+          modalVisible={visibleClearCache}
+          apply={btnClearСache}
+        />
+        <MyDatePicker
+          onChange={setStart}
+          date={start}
+          open={visibleDatePickerStart}
+          setOpen={setVisibleDatePickerStart}
+          title={'Начало'}
+          mode={'time'}
+        />
+        <MyDatePicker
+          onChange={setEnd}
+          date={end}
+          open={visibleDatePickerEnd}
+          setOpen={setVisibleDatePickerEnd}
+          title={'Конец'}
+          mode={'time'}
+        />
+        <MyDatePicker
+          onChange={setDinner}
+          date={dinner}
+          open={visibleTimePicker}
+          setOpen={setVisibleTimePicker}
+          title={'Обед'}
+          mode={'time'}
+        />
+      </ScrollView>
+    );
+  };
+
+  return (
+    <SettingsView
+      timeStart={timeStart}
+      timeEnd={timeEnd}
+      timeDinner={timeDinner}
+      tarifRate={tarifRate}
+    />
   );
 };
 
@@ -167,6 +180,7 @@ const styles = StyleSheet.create({
   },
   applyDate: {
     backgroundColor: styleFile.window.backgroundColor,
+    marginBottom: 15,
   },
   titleHeader: {
     color: styleFile.text.color,
@@ -177,7 +191,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: styleFile.text.color,
-    fontSize: 15,
+    fontSize: styleFile.text.fontSize,
     textAlign: 'center',
   },
   btnWrap: {

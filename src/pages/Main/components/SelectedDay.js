@@ -50,11 +50,12 @@ const styles = StyleSheet.create({
   textWrap: {
     borderColor: styleFile.border.borderColor,
     borderBottomWidth: 1,
-    padding: 10,
+    padding: 12,
   },
   text: {
-    fontSize: 15,
+    fontSize: styleFile.text.fontSize,
     textAlign: 'center',
+    fontWeight: 'bold',
     color: styleFile.text.color,
   },
 });

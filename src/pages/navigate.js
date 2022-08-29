@@ -42,7 +42,7 @@ export default function Navigate() {
           headerTintColor: styleFile.text.color,
           headerTitleStyle: {
             fontWeight: 'bold',
-            fontSize: 17,
+            fontSize: 18,
           },
           headerTitleAlign: 'center',
         })}>
@@ -67,8 +67,6 @@ export default function Navigate() {
           component={Stats}
           options={{
             title: 'Статистика',
-            headerRight: false,
-            //вылетает приложение когда очистка кэша
           }}
         />
       </Stack.Navigator>

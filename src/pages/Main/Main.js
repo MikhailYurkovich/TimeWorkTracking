@@ -7,17 +7,16 @@ import {CalendarPicker} from './components/Calendar';
 import {SelectedDay} from './components/SelectedDay';
 import {MonthStats} from './components/MonthStats';
 import {querySettings, queryListMonth} from '../../database/allSchemas';
-
-// import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 
 const Main = ({navigation}) => {
   const listMonth = useSelector(state => state.listMonth);
   const selectedMount = useSelector(state => state.selectedMount);
   const dispatch = useDispatch();
 
-  // const adUnitId = __DEV__
-  //   ? TestIds.BANNER
-  //   : 'ca-app-pub-8017817006445043/6458654762';
+  const adUnitId = __DEV__
+    ? TestIds.BANNER
+    : 'ca-app-pub-8017817006445043/6458654762';
 
   useEffect(() => {
     querySettings(dispatch);
@@ -34,6 +33,9 @@ const Main = ({navigation}) => {
         <SelectedDay listMonth={listMonth} />
       </View>
       <View style={styles.monthStatsWrap}>
+        <View style={styles.banner}>
+          <BannerAd size={BannerAdSize.BANNER} unitId={adUnitId} />
+        </View>
         <MonthStats
           listMonth={listMonth}
           selectedMount={selectedMount}
@@ -52,22 +54,24 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   calendarPickerWrap: {
-    marginBottom: 15,
     flexGrow: 0,
     flexShrink: 0,
     flexBasis: 'auto',
+    marginBottom: 10,
   },
   selectedDayWrap: {
     flexGrow: 1,
     flexShrink: 0,
     flexBasis: 'auto',
-    marginBottom: 15,
+  },
+  banner: {
+    alignItems: 'center',
+    marginVertical: 5,
   },
   monthStatsWrap: {
     flexGrow: 0,
     flexShrink: 0,
     flexBasis: 'auto',
-    backgroundColor: styleFile.window.backgroundColor,
   },
 });
 
