@@ -21,8 +21,8 @@ export const MonthStats = ({listMonth, navigation, selectedMount}) => {
         })
       }>
       <View style={styles.wrap}>
-        <View style={[styles.textWrap]}>
-          <Text style={[styles.text, {paddingBottom: 2}]}>{`Итого: ${
+        <View style={styles.textWrap}>
+          <Text style={styles.text}>{`Итого: ${
             listMonth ? listMonth.fullTimeFullSalary.timeWork : 0
           } ч.`}</Text>
           <Text style={styles.text}>{`Заработная плата: ${

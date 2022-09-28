@@ -5,6 +5,7 @@ import {
   Text,
   Modal,
   TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
 import styleFile from '../style';
 import moment from 'moment';
@@ -13,9 +14,15 @@ import MyDatePicker from './DatePicker';
 import {BtnSelectDate} from './BtnSelectDate';
 import {BtnContainerApply} from './BtnContainerApply';
 import {BtnInput} from './BtnInput';
+import {BtnInputText} from './BtnInputText';
 import {writeToDB} from '../scripts/operateDB';
 import {useDispatch} from 'react-redux';
 import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
+import analytics from '@react-native-firebase/analytics';
+
+const adUnitId = __DEV__
+  ? TestIds.BANNER
+  : 'ca-app-pub-8017817006445043/3662242673';
 
 const ModalClockRecords = ({
   setmodalVisible,
@@ -24,31 +31,32 @@ const ModalClockRecords = ({
   timeEnd,
   timeDinner,
   salarySettings,
+  theNote,
 }) => {
-  const [start, setstart] = useState(null);
-  const [end, setend] = useState(null);
-  const [dinner, setdinner] = useState(null);
-  const [tarifRate, settarifRate] = useState(NaN);
+  const [start, setStart] = useState(null);
+  const [end, setEnd] = useState(null);
+  const [dinner, setDinner] = useState(null);
+  const [tarifRate, setTarifRate] = useState(NaN);
+  const [note, setNote] = useState('');
   const dispatch = useDispatch();
 
   const [visibleDatePickerStart, setvisibleDatePickerStart] = useState(false);
   const [visibleDatePickerEnd, setvisibleDatePickerEnd] = useState(false);
   const [visibleTimePicker, setvisibleTimePicker] = useState(false);
-  const adUnitId = __DEV__
-    ? TestIds.BANNER
-    : 'ca-app-pub-8017817006445043/3662242673';
 
   useEffect(() => {
-    setstart(timeStart);
-    setend(
+    setStart(timeStart);
+    setEnd(
       moment(new Date(timeStart))
         .hour(moment(timeEnd).hour())
         .minute(moment(timeEnd).minute())
         .toDate(),
     );
-    setdinner(timeDinner);
-    settarifRate(salarySettings);
-  }, [timeStart, timeEnd, timeDinner, salarySettings]);
+
+    setDinner(timeDinner);
+    setTarifRate(salarySettings);
+    setNote(theNote);
+  }, [timeStart, timeEnd, timeDinner, salarySettings, theNote]);
 
   const btnClose = () => {
     setmodalVisible(false);
@@ -63,12 +71,20 @@ const ModalClockRecords = ({
     setvisibleTimePicker(true);
   };
 
+  const predifinedEvent = async () => {
+    await analytics().logEvent('writeToBD', {
+      id: start,
+    });
+  };
+
   const apply1 = () => {
+    predifinedEvent();
     const obj = {
       timeStart: start,
       timeEnd: end,
       timeDinner: dinner,
       tarifRate: tarifRate,
+      note: note,
       dispatch,
     };
 
@@ -90,7 +106,7 @@ const ModalClockRecords = ({
         btnClose();
       }}>
       <MyDatePicker
-        onChange={setstart}
+        onChange={setStart}
         date={start}
         open={visibleDatePickerStart}
         setOpen={setvisibleDatePickerStart}
@@ -98,7 +114,7 @@ const ModalClockRecords = ({
         mode={'time'}
       />
       <MyDatePicker
-        onChange={setend}
+        onChange={setEnd}
         date={end}
         open={visibleDatePickerEnd}
         setOpen={setvisibleDatePickerEnd}
@@ -106,7 +122,7 @@ const ModalClockRecords = ({
         mode={'time'}
       />
       <MyDatePicker
-        onChange={setdinner}
+        onChange={setDinner}
         date={dinner}
         open={visibleTimePicker}
         setOpen={setvisibleTimePicker}
@@ -120,39 +136,46 @@ const ModalClockRecords = ({
 
       <View style={styles.modalContent}>
         <View style={styles.modalView}>
-          <Text style={[styles.textTitle, {marginBottom: 3}]}>
-            {moment(timeStart).calendar(calendarSetting)}
-          </Text>
-          <BtnSelectDate
-            textTitle={'Начало'}
-            text={moment(start).format('HH:mm')}
-            apply={applyVisibleDatePickerStart}
-          />
-          <BtnSelectDate
-            textTitle={'Конец'}
-            text={moment(end).format('HH:mm')}
-            apply={applyVisibleDatePickerEnd}
-          />
-          <BtnSelectDate
-            textTitle={'Перерыв'}
-            text={`${moment(dinner).format('H ч. mm мин.')}`}
-            apply={applyVisibleTimePicker}
-          />
-          <BtnInput
-            textTitle={'Часовая ставка, р.'}
-            text={`${salarySettings}`}
-            onChange={settarifRate}
-            placeholder={'Ставка'}
-          />
-
-          <View style={styles.btnWrap}>
-            <BtnContainerApply
-              btnApply_1={btnClose}
-              btnApply_2={apply1}
-              textBtn_1={'Отмена'}
-              textBtn_2={'Применить'}
+          <ScrollView>
+            <Text style={[styles.textTitle, {marginBottom: 3}]}>
+              {moment(timeStart).calendar(calendarSetting)}
+            </Text>
+            <BtnSelectDate
+              textTitle={'Начало'}
+              text={moment(start).format('HH:mm')}
+              apply={applyVisibleDatePickerStart}
             />
-          </View>
+            <BtnSelectDate
+              textTitle={'Конец'}
+              text={moment(end).format('HH:mm')}
+              apply={applyVisibleDatePickerEnd}
+            />
+            <BtnSelectDate
+              textTitle={'Перерыв'}
+              text={`${moment(dinner).format('H ч. mm мин.')}`}
+              apply={applyVisibleTimePicker}
+            />
+            <BtnInput
+              textTitle={'Часовая ставка, р.'}
+              text={`${salarySettings}`}
+              onChange={setTarifRate}
+              placeholder={'Ставка'}
+            />
+            <BtnInputText
+              onChange={text => setNote(text)}
+              placeholder={'Заметка'}
+              text={`${note}`}
+            />
+
+            <View style={styles.btnWrap}>
+              <BtnContainerApply
+                btnApply_1={btnClose}
+                btnApply_2={apply1}
+                textBtn_1={'Отмена'}
+                textBtn_2={'Применить'}
+              />
+            </View>
+          </ScrollView>
         </View>
       </View>
       <View style={styles.banner}>

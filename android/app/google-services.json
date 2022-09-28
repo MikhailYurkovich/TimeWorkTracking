@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "94052812659",
+    "project_id": "timework-5bddc",
+    "storage_bucket": "timework-5bddc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:94052812659:android:09927c3c6d2ccfc2e82706",
+        "android_client_info": {
+          "package_name": "com.timepicker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "94052812659-2mm9lv7hlrpdek0eu8efavlil77m5jgj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAw3eH0HMg1bpryNpqy5hImDYE1sWaI9gA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "94052812659-2mm9lv7hlrpdek0eu8efavlil77m5jgj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

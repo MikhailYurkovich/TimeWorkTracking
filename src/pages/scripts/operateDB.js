@@ -28,6 +28,7 @@ export const writeToDB = obj => {
     salarySettings: {
       tarifRate: obj.tarifRate,
     },
+    note: obj.note,
     dispatch: obj.dispatch,
   };
 

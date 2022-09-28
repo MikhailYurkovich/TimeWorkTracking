@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, StyleSheet, ScrollView, Dimensions} from 'react-native';
+import {View, StyleSheet, ScrollView} from 'react-native';
 import styleFile from '../style';
 import moment from 'moment/min/moment-with-locales';
 import {useSelector, useDispatch} from 'react-redux';
@@ -9,14 +9,14 @@ import {MonthStats} from './components/MonthStats';
 import {querySettings, queryListMonth} from '../../database/allSchemas';
 import {BannerAd, BannerAdSize, TestIds} from 'react-native-google-mobile-ads';
 
+const adUnitId = __DEV__
+  ? TestIds.BANNER
+  : 'ca-app-pub-8017817006445043/6458654762';
+
 const Main = ({navigation}) => {
   const listMonth = useSelector(state => state.listMonth);
   const selectedMount = useSelector(state => state.selectedMount);
   const dispatch = useDispatch();
-
-  const adUnitId = __DEV__
-    ? TestIds.BANNER
-    : 'ca-app-pub-8017817006445043/6458654762';
 
   useEffect(() => {
     querySettings(dispatch);

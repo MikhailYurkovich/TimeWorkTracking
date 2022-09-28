@@ -61,6 +61,7 @@ export const RecordMissing = ({selectedDay}) => {
         timeEnd={timeEnd}
         timeDinner={timeDinner}
         salarySettings={tarifRate}
+        theNote={''}
       />
     </>
   );

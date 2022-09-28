@@ -13,6 +13,7 @@ export const SelectedWorkDay = ({workDay, selectedDay}) => {
   const timeDinner = moment(new Date()).hour(0).minute(workDay.timeDinner);
   const timeWork = workDay.timeWork;
   const tarifRate = workDay.salarySettings.tarifRate;
+  const theNote = workDay.note;
   const dispatch = useDispatch();
 
   const [modalVisible, setmodalVisible] = useState(false);
@@ -22,24 +23,50 @@ export const SelectedWorkDay = ({workDay, selectedDay}) => {
     <View>
       <View>
         <View style={styles.textWrap}>
-          <Text style={[styles.text, styles.textWidth]}>
+          <Text style={[styles.text, styles.textWidth, styles.textCenter]}>
             {`${moment(timeStart).format('HH:mm')} - ${moment(timeEnd).format(
               'HH:mm',
             )}`}
           </Text>
 
-          <Text style={[styles.text, styles.textWidth]}>
+          <Text style={[styles.text, styles.textWidth, styles.textCenter]}>
             {moment(new Date()).hour(0).minute(timeWork).format('H ч. m м.')}
           </Text>
-          <Text style={[styles.text, styles.textWidth]}>{`Перерыв: ${moment(
-            timeDinner,
-          ).format('H ч. m м.')}`}</Text>
           <Text
             style={[
               styles.text,
               styles.textWidth,
+              styles.textCenter,
+            ]}>{`Перерыв: ${moment(timeDinner).format('H ч. m м.')}`}</Text>
+          <Text
+            style={[
+              styles.text,
+              styles.textWidth,
+              styles.textCenter,
             ]}>{`Часовая ставка: ${tarifRate} р.`}</Text>
         </View>
+
+        {theNote ? (
+          <View style={styles.note}>
+            <Text
+              style={[
+                styles.text,
+                styles.textWidth,
+                styles.textCenter,
+                {padding: 0},
+              ]}>
+              Заметка
+            </Text>
+            <Text
+              style={[
+                styles.text,
+                styles.textWidth,
+                {paddingHorizontal: 10},
+              ]}>{`${theNote}`}</Text>
+          </View>
+        ) : (
+          false
+        )}
 
         <View style={styles.btnWrap}>
           <TouchableHighlight
@@ -49,7 +76,9 @@ export const SelectedWorkDay = ({workDay, selectedDay}) => {
             onPress={() => {
               setmodalVisibleModalDel(true);
             }}>
-            <Text style={[styles.text, {color: 'red'}]}>Удалить</Text>
+            <Text style={[styles.text, {color: 'red'}, styles.textCenter]}>
+              Удалить
+            </Text>
           </TouchableHighlight>
           <TouchableHighlight
             underlayColor={styleFile.button.underlayColor}
@@ -64,7 +93,12 @@ export const SelectedWorkDay = ({workDay, selectedDay}) => {
             onPress={() => {
               setmodalVisible(true);
             }}>
-            <Text style={[styles.text, {color: styleFile.tab.colorActive}]}>
+            <Text
+              style={[
+                styles.text,
+                {color: styleFile.tab.colorActive},
+                styles.textCenter,
+              ]}>
               Изменить
             </Text>
           </TouchableHighlight>
@@ -77,6 +111,7 @@ export const SelectedWorkDay = ({workDay, selectedDay}) => {
         timeEnd={timeEnd}
         timeDinner={timeDinner}
         salarySettings={tarifRate}
+        theNote={theNote}
       />
       <ModalWinDelete
         text={`${moment(selectedDay).format('DD MMMM YYYY')}`}
@@ -97,6 +132,8 @@ const styles = StyleSheet.create({
     fontSize: styleFile.text.fontSize,
     color: styleFile.text.color,
     padding: 5,
+  },
+  textCenter: {
     textAlign: 'center',
   },
   textWidth: {
@@ -106,7 +143,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     flexWrap: 'wrap',
-    paddingVertical: 8,
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: styleFile.border.borderColor,
+  },
+  note: {
+    width: '100%',
+    paddingVertical: 5,
     borderBottomWidth: 1,
     borderBottomColor: styleFile.border.borderColor,
   },

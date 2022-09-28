@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import Main from './Main/Main';
 import Settings from './Settings/Settings';
 import Stats from './Stats/Stats';
@@ -6,14 +6,33 @@ import {Pressable} from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import styleFile from './style';
 
+import analytics from '@react-native-firebase/analytics';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
 
 export default function Navigate() {
+  const routeNameRef = useRef();
+  const navigationRef = useRef();
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      ref={navigationRef}
+      onReady={() => {
+        routeNameRef.current = navigationRef.current.getCurrentRoute().name;
+      }}
+      onStateChange={async () => {
+        const previousRouteName = routeNameRef.current;
+        const currentRouteName = navigationRef.current.getCurrentRoute().name;
+
+        if (previousRouteName !== currentRouteName) {
+          await analytics().logScreenView({
+            screen_name: currentRouteName,
+            screen_class: currentRouteName,
+          });
+        }
+        routeNameRef.current = currentRouteName;
+      }}>
       <Stack.Navigator
         initialRouteName="Main"
         screenOptions={({navigation}) => ({

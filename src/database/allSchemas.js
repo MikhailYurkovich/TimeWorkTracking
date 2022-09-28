@@ -11,6 +11,7 @@ export const ListWork = {
     timeDinner: 'int',
     timeWork: 'int',
     salarySettings: '{}',
+    note: 'string',
   },
   primaryKey: 'id',
 };
@@ -39,7 +40,7 @@ export const Settings = {
 const dataBaseOptions = {
   path: 'TimeReal', //TimeReal
   schema: [Mounth, ListWork, Settings],
-  schemaVersion: 3, //3
+  schemaVersion: 4, //3
 };
 
 export const updateSettings = (dispatch, insertObjSettings) => {
@@ -98,6 +99,7 @@ export const insertListWork = insertObj =>
           timeDinner: insertObj.timeDinner,
           timeWork: insertObj.timeWork,
           salarySettings: insertObj.salarySettings,
+          note: insertObj.note,
         },
         'modified',
       );
